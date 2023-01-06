@@ -49,8 +49,13 @@ public class ApplicantService {
 
     Applicant applicant = applicantRepository.findById(applicantId).orElseThrow(() -> new IllegalArgumentException(ERROR_REQ_PARAM_ID.toString()));
 
-    applicant.changeStatus(ApplicantStatus.valueOf(applicantStatus.getApplicantStatusCode()));
-
+    //Fail 이라면 현재 지원자가 어떤 상태인지는 상관하지 않고 변수 하나 추가해서 2가지 상태를 저장하도록 로직 변경
+    if(applicantStatus.getApplicantStatusCode() == ApplicantStatus.FAIL.getCode()){
+      applicant.fail();
+    }
+    else {
+      applicant.changeStatus(ApplicantStatus.valueOf(applicantStatus.getApplicantStatusCode()));
+    }
     applicantRepository.save(applicant);
 
     return applicant.getId();

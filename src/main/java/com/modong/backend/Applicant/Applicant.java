@@ -37,6 +37,8 @@ public class Applicant extends BaseTimeEntity {
   @Enumerated(EnumType.STRING)
   private ApplicantStatus applicantStatus;
 
+  private boolean isFail = false;
+
   @ManyToOne(fetch = FetchType.LAZY)
   private Application application;
 
@@ -51,9 +53,14 @@ public class Applicant extends BaseTimeEntity {
     this.name = applicantRequest.getName();
     this.application = application;
     this.applicantStatus = ApplicantStatus.ACCEPT;
+    this.rate = 0f;
   }
 
   public void changeStatus(ApplicantStatus applicantStatus) {
     this.applicantStatus = applicantStatus;
+  }
+
+  public void fail(){
+    this.isFail = true;
   }
 }

@@ -14,11 +14,14 @@ public class ApplicantSimpleResponse {
   private String status;
   private Date submitDate;
 
+  private boolean isFail;
+
   public ApplicantSimpleResponse(Applicant applicant) {
     this.id = applicant.getId();
     this.name = applicant.getName();
     this.rate = applicant.getRate();
     this.status = applicant.getApplicantStatus().toString();
     this.submitDate = asDate(applicant.getCreateDate());
+    this.isFail = applicant.isFail();
   }
 }
