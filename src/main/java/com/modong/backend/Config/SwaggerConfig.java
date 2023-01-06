@@ -2,6 +2,7 @@ package com.modong.backend.Config;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
@@ -22,15 +23,22 @@ import org.springframework.util.StringUtils;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Server;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
+@EnableOpenApi
 public class SwaggerConfig {
   @Bean
   public Docket api() {
+    Server prodServer = new Server("prod url","https://api.exhelper.site","modong prod server",
+        Collections.emptyList(),Collections.emptyList());
+    Server localServer = new Server("local url","http://localhost:8080","modong local server",Collections.emptyList(),Collections.emptyList());
     return new Docket(DocumentationType.OAS_30)
+        .servers(prodServer,localServer)
         .useDefaultResponseMessages(false)
         .select()
         .apis(RequestHandlerSelectors.basePackage("com.modong.backend"))
