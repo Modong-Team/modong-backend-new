@@ -24,9 +24,9 @@ public class QuestionOptionService {
     return questionOption;
   }
   @Transactional
-  public List<QuestionOption> createList(QuestionOptionRequest questionOptionRequest, Question question){
+  public List<QuestionOption> createList(List<String> questionOptionRequest, Question question){
     List<QuestionOption> results = new ArrayList<>();
-    for(String value : questionOptionRequest.getValues()){
+    for(String value : questionOptionRequest){
       results.add(create(value,question));
     }
     return results;

@@ -49,7 +49,7 @@ public class ApplicantService {
 
     Applicant applicant = applicantRepository.findById(applicantId).orElseThrow(() -> new IllegalArgumentException(ERROR_REQ_PARAM_ID.toString()));
 
-    applicant.changeStatus(ApplicantStatus.valueOf(applicantStatus.getApplicationStatus()));
+    applicant.changeStatus(ApplicantStatus.valueOf(applicantStatus.getApplicantStatusCode()));
 
     applicantRepository.save(applicant);
 

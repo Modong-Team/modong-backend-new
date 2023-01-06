@@ -44,10 +44,10 @@ public class ApplicantController {
   }
 
   @PatchMapping("/applicant/{applicant_id}")// 지원자의상태를 변경할때 사용하는 API
-  @Operation(summary = "지원자 상태 변경", description = "지원자를 상태를 변경한다.")
+  @Operation(summary = "지원자 상태 변경", description = "지원자를 상태를 변경한다. FAIL(1),ACCEPT(2),APPLICATION(3),INTERVIEW(4),SUCCESS(5)")
   public ResponseEntity changeApplicantStatus(@Validated @PathVariable(name="applicant_id") Long applicantId, @RequestBody ChangeApplicantStatusRequest applicantStatus){
     SavedId savedId = new SavedId(applicantService.changeApplicantStatus(applicantId,applicantStatus));
-    return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.OK.value(), MessageCode.SUCCESS_GET));
+    return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.OK.value(), MessageCode.SUCCESS_UPDATE));
   }
 
   @PostMapping("/applicant")//지원자 생성과 동시에 답변들 저장하는 API

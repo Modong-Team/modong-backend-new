@@ -32,14 +32,14 @@ public class FormController {
   private final FormService formService;
   //페이지 생성
   @PostMapping("/form")
-  @Operation(summary = "페이지 생성", description = "지원서에 새로운 페이지를 저장한다.")
+  @Operation(summary = "페이지 생성", description = "지원서에 새로운 페이지를 저장한다. 질문 유형 QUESTION(1), SINGLE_SELECT_QUESTION(2), MULTI_SELECT_QUESTION(3)")
   public ResponseEntity createForm(@Valid @RequestBody FormRequest formRequest){
       SavedId savedId = new SavedId(formService.create(formRequest));
       return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.CREATED.value(), MessageCode.SUCCESS_CREATE));
   }
   //페이지 수정
   @PutMapping("/form/{form_id}")
-  @Operation(summary = "페이지 수정", description = "페이지의 ID를 이용해 수정한다.")
+  @Operation(summary = "페이지 수정", description = "페이지의 ID를 이용해 수정한다. 질문 유형 QUESTION(1), SINGLE_SELECT_QUESTION(2), MULTI_SELECT_QUESTION(3)")
   public ResponseEntity updateForm(@Valid @PathVariable(name = "form_id") Long formId, @RequestBody FormRequest formRequest){
     SavedId savedId = new SavedId(formService.update(formId,formRequest));
     return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.OK.value(), MessageCode.SUCCESS_UPDATE));

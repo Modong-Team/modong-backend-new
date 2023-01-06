@@ -32,4 +32,8 @@ public enum ApplicantStatus {
     }
     return applicantStatus;
   }
+
+  public int getCode() {
+    return this.code;
+  }
 }

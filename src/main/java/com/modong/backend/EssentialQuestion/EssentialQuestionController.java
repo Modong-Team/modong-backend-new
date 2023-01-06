@@ -28,7 +28,6 @@ public class EssentialQuestionController {
   public ResponseEntity getAllEssentialQuestions(){
     List<EssentialQuestionResponse> essentialQuestions = essentialQuestionService.findAll();
 
-
     return ResponseEntity.ok(new BaseResponse(essentialQuestions, HttpStatus.OK.value(), MessageCode.SUCCESS_GET_LIST));
   }
 
