@@ -31,6 +31,8 @@ public class Application extends BaseTimeEntity {
 
   private String urlId;
 
+  private boolean isClosed;
+
   @ManyToOne(fetch = FetchType.LAZY)
   private Club club;
 
