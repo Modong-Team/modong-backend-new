@@ -1,8 +1,6 @@
 name: Deploy to Amazon EC2 modong prod api server
 
 on:
-  push:
-    branches: [ "production" ]
   pull_request:
     branches: [ "production" ]
 

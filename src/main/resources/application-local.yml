@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/modong?serverTimezone=Asia/Seoul
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 100
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+server:
+  error:
+    include-stacktrace: never
+springdoc:
+  version: '1.16.4'
+  api-docs:
+    groups:
+      enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+  show-actuator: true
+
+
+logging.level:
+  org.hibernate.SQL: debug
+  # org.hibernate.type: trace
+
+jwt:
+  token:
+    secret-key: MySubProject Modong`s jwt secret-key
+    access:
+      expire-time: 86400
+    refresh:
+      expire-time: 604800
+
+allow-cors:
+  list: http://localhost

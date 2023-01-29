@@ -2,6 +2,8 @@
 
 [모두의 동아리] backend 레포지토리 (New)
 
+Test Coverage [![codecov](https://codecov.io/gh/Modong-Team/modong-backend-new/branch/develop/graph/badge.svg?token=QGR4MM953C)](https://codecov.io/gh/Modong-Team/modong-backend-new)
+
 ---
 
 ## 기술 스택

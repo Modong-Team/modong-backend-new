@@ -12,12 +12,34 @@ spring:
         show_sql: false
         format_sql: false
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-  mvc:
-    pathmatch:
-      matching-strategy: ANT_PATH_MATCHER
 logging.level:
   org.hibernate.SQL: debug
   # org.hibernate.type: trace
+
+server:
+  error:
+    include-stacktrace: never
+springdoc:
+  version: '1.16.4'
+  api-docs:
+    groups:
+      enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+  show-actuator: true
+
+jwt:
+  token:
+    secret-key: ${JWT_SECRET_KEY}
+    access:
+      expire-time: ${JWT_ACCESS_TOKEN_EXPIRE_TIME}
+    refresh:
+      expire-time: ${JWT_REFRESH_TOKEN_EXPIRE_TIME}
+
 allow-cors:
   list: ${CORS}
 
