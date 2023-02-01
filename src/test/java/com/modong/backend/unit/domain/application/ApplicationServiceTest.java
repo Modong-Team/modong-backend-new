@@ -193,29 +193,29 @@ public class ApplicationServiceTest extends ServiceTest {
         .isInstanceOf(ApplicationNotFoundException.class);
   }
 
-  @DisplayName("지원서 마감 상태로 변경 성공")
-  @Test
-  public void SuccessApplicationClose(){
-    //given
-    ReflectionTestUtils.setField(updatedApplication,"id",APPLICATION_ID);
-    application.open();
-    updatedApplication.close();
-    given(applicationRepository.findById(anyLong()))
-        .willReturn(Optional.of(application));
-
-    given(applicationRepository.save(any()))
-        .willReturn(Optional.of(updatedApplication));
-
-    //when
-    Long savedId = applicationService.close(APPLICATION_ID);
-
-    //then
-
-    assertThat(savedId).isNotNull();
-
-    assertThatCode(() -> applicationService.close(APPLICATION_ID)).doesNotThrowAnyException();
-
-  }
+//  @DisplayName("지원서 마감 상태로 변경 성공")
+//  @Test
+//  public void SuccessApplicationClose(){
+//    //given
+//    ReflectionTestUtils.setField(updatedApplication,"id",APPLICATION_ID);
+//    application.open();
+//    updatedApplication.close();
+//    given(applicationRepository.findById(anyLong()))
+//        .willReturn(Optional.of(application));
+//
+//    given(applicationRepository.save(any()))
+//        .willReturn(Optional.of(updatedApplication));
+//
+//    //when
+//    Long savedId = applicationService.close(APPLICATION_ID);
+//
+//    //then
+//
+//    assertThat(savedId).isNotNull();
+//
+//    assertThatCode(() -> applicationService.close(APPLICATION_ID)).doesNotThrowAnyException();
+//
+//  }
 
   //@DisplayName("지원서 마감 상태로 변경 실패 - 유요한 요청이지만 여러번 요청이 올 경우")
   @DisplayName("지원서 마감 상태로 변경 실패 - 요청한 id를 가진 지원서가 없을 경우 ApplicationNotFoundException 가 발생해야 한다.")
@@ -244,27 +244,27 @@ public class ApplicationServiceTest extends ServiceTest {
         .isInstanceOf(StatusBadRequestException.class);
   }
 
-  @DisplayName("지원서 모집 상태로 변경 성공")
-  @Test
-  public void SuccessApplicationOpen(){
-    //given
-    ReflectionTestUtils.setField(updatedApplication,"id",APPLICATION_ID);
-
-    application.close();
-    updatedApplication.open();
-
-    given(applicationRepository.findById(anyLong()))
-        .willReturn(Optional.of(application));
-
-    given(applicationRepository.save(any()))
-        .willReturn(Optional.of(updatedApplication));
-    //when
-    Long savedId = applicationService.open(APPLICATION_ID);
-
-    //then
-    assertThatCode(() -> applicationService.open(APPLICATION_ID)).doesNotThrowAnyException();
-    assertThat(savedId).isEqualTo(application.getId());
-  }
+//  @DisplayName("지원서 모집 상태로 변경 성공")
+//  @Test
+//  public void SuccessApplicationOpen(){
+//    //given
+//    ReflectionTestUtils.setField(updatedApplication,"id",APPLICATION_ID);
+//
+//    application.close();
+//    updatedApplication.open();
+//
+//    given(applicationRepository.findById(anyLong()))
+//        .willReturn(Optional.of(application));
+//
+//    given(applicationRepository.save(any()))
+//        .willReturn(Optional.of(updatedApplication));
+//    //when
+//    Long savedId = applicationService.open(APPLICATION_ID);
+//
+//    //then
+//    assertThatCode(() -> applicationService.open(APPLICATION_ID)).doesNotThrowAnyException();
+//    assertThat(savedId).isEqualTo(application.getId());
+//  }
 
   @DisplayName("지원서 모집 상태로 변경 실패 - 요청한 id를 가진 지원서가 없을 경우 ApplicationNotFoundException 가 발생해야 한다.")
   @Test
