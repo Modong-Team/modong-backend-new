@@ -4,10 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
 @Schema(name = "회원가입 요청")
+@NoArgsConstructor
 public class MemberRegisterRequest {
   @NotNull
   @Schema(description = "아이디",  example = "test123")

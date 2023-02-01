@@ -4,10 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
 @Schema(name = "동아리 생성 요청")
+@NoArgsConstructor
 public class ClubCreateRequest {
 
   @NotBlank

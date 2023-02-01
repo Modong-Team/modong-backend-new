@@ -16,14 +16,14 @@ public class GlobalExceptionHandler {
   private static final String ERROR_LOGGING_MESSAGE = "예외 발생: ";
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ExceptionHandler
+  @ExceptionHandler(BadRequestException.class)
   public ErrorResponse handleBadRequestException(final BadRequestException e) {
     log.error(ERROR_LOGGING_MESSAGE, e);
     return new ErrorResponse(e.getErrorCode(), e.getClientMessage());
   }
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  @ExceptionHandler
+  @ExceptionHandler(NotFoundException.class)
   public ErrorResponse handleNotFoundException(final NotFoundException e) {
     log.error(ERROR_LOGGING_MESSAGE, e);
     return new ErrorResponse(e.getErrorCode(), e.getClientMessage());

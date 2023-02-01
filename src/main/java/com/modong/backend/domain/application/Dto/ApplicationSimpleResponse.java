@@ -13,10 +13,13 @@ public class ApplicationSimpleResponse {
   private String title;
   @Schema(description = "지원서 링크 아이디", example = "9CJOj71S1o")
   private String urlId;
+  @Schema(description = "지원서 마감 상태", example = "true/false")
+  private boolean closed;
 
   public ApplicationSimpleResponse(Application application) {
     this.id = application.getId();
     this.title = application.getTitle();
     this.urlId = application.getUrlId();
+    this.closed = application.isClosed();
   }
 }

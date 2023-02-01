@@ -44,10 +44,11 @@ public class Application extends BaseTimeEntity {
 
 
 
-  public Application(ApplicationRequest applicationRequest, Club club) {
-    this.title = applicationRequest.getTitle();
+  public Application(ApplicationRequest request, Club club) {
+    this.title = request.getTitle();
     this.club = club;
-    this.urlId = applicationRequest.getUrlId();
+    this.urlId = request.getUrlId();
+    open();
   }
 
   public void addEssential(ApplicationEssential applicationEssential){
@@ -64,5 +65,19 @@ public class Application extends BaseTimeEntity {
 
   public void initEssentials() {
     this.essentials.remove(this.essentials);
+  }
+
+  public boolean isOpen(){
+    return this.isClosed == false;
+  }
+  public boolean isClose(){
+    return this.isClosed == true;
+  }
+
+  public void close(){
+    this.isClosed = true;
+  }
+  public void open(){
+    this.isClosed = false;
   }
 }

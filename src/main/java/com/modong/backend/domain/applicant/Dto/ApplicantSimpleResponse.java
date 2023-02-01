@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @Getter
 @Schema(name = "지원자 간단 조회")
-public class ApplicantSimpleResponse {
+public class ApplicantSimpleResponse implements Comparable<ApplicantSimpleResponse> {
   @Schema(description = "지원자 id",  example = "1")
   private Long id;
   @Schema(description = "이름",  example = "아무개")
@@ -30,5 +30,10 @@ public class ApplicantSimpleResponse {
     this.status = applicant.getApplicantStatus().toString();
     this.submitDate = asDate(applicant.getCreateDate());
     this.isFail = applicant.isFail();
+  }
+
+  @Override
+  public int compareTo(ApplicantSimpleResponse o) {
+    return Boolean.compare(o.isFail,isFail);
   }
 }

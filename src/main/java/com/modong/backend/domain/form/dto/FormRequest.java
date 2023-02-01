@@ -7,11 +7,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import java.util.List;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
 @Schema(name = "지원서 페이지 생성 요청")
+@NoArgsConstructor
 public class FormRequest {
 
   @NotNull

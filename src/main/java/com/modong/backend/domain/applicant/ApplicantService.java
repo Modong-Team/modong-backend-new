@@ -6,6 +6,10 @@ import com.modong.backend.domain.applicant.Dto.ApplicantDetailResponse;
 import com.modong.backend.domain.applicant.Dto.ApplicantRequest;
 import com.modong.backend.domain.applicant.Dto.ApplicantSimpleResponse;
 import com.modong.backend.domain.applicant.Dto.ChangeApplicantStatusRequest;
+import com.modong.backend.domain.applicant.Dto.PageApplicantsResponse;
+import com.modong.backend.domain.applicant.Dto.SearchApplicantRequest;
+import com.modong.backend.domain.applicant.repository.ApplicantRepository;
+import com.modong.backend.domain.applicant.repository.ApplicantRepositoryCustomImpl;
 import com.modong.backend.domain.application.Application;
 import com.modong.backend.domain.application.ApplicationService;
 import com.modong.backend.Enum.ApplicantStatus;
@@ -16,6 +20,8 @@ import com.modong.backend.domain.questionAnswer.QuestionAnswerService;
 import java.util.stream.Collectors;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApplicantService {
 
   private final ApplicantRepository applicantRepository;
+
+  private final ApplicantRepositoryCustomImpl applicantRepositoryCustomImpl;
   private final ApplicationService applicationService;
   private final EssentialAnswerService essentialAnswerService;
   private final QuestionAnswerService questionAnswerService;
@@ -81,6 +89,13 @@ public class ApplicantService {
     }
 
     return applicant.getId();
+
+  }
+
+  public PageApplicantsResponse findAllByApplicationByIdAndStatus(Long applicationId, SearchApplicantRequest request,
+      Pageable pageable) {
+    Page<Applicant> result = applicantRepositoryCustomImpl.searchByApplicationIdAndStatus(applicationId,request,pageable);
+    return new PageApplicantsResponse(result);
 
   }
 }

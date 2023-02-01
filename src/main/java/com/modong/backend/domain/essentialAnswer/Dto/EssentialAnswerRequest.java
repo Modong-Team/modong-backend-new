@@ -4,9 +4,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Schema(name = "필수 질문 요청")
+@NoArgsConstructor
 public class EssentialAnswerRequest {
 
 

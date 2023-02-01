@@ -4,8 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import javax.validation.constraints.Null;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class QuestionOptionRequest {
 
   @Schema(description = "선택하는 질문의 옵션 값들", nullable = true, example = "선택 질문의 값입니다.")

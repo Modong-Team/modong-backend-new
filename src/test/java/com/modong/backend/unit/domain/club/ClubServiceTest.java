@@ -7,7 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.modong.backend.domain.club.Club;
-import com.modong.backend.domain.club.ClubCheckRequest;
+import com.modong.backend.domain.club.Dto.ClubCheckRequest;
 import com.modong.backend.domain.club.ClubService;
 import com.modong.backend.domain.club.Dto.ClubCreateResponse;
 import com.modong.backend.domain.club.Dto.ClubCreateRequest;

@@ -4,10 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
 @Schema(name = "토큰 재발행 요청")
+@NoArgsConstructor
 public class TokenRequest {
 
   @NotNull

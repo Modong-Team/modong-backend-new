@@ -6,10 +6,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
 @Schema(name = "로그인 요청")
+@NoArgsConstructor
 public class LoginRequest {
   @NotBlank
   @Schema(description = "아이디",  example = "test123")

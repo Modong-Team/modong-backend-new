@@ -9,4 +9,6 @@ public interface ApplicationRepository extends JpaRepository<Application,Long> {
   List<Application> findAllByClubId(Long clubId);
 
   Optional<Application> findByUrlId(String urlId);
+
+  boolean existsByUrlId(String urlId);
 }

@@ -4,11 +4,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Schema(name = "지원서 생성 요청")
+@NoArgsConstructor
 public class ApplicationRequest {
 
   @NotNull
@@ -24,7 +27,12 @@ public class ApplicationRequest {
 
   @Schema(description = "필수질문 ID 리스트", nullable = true,  example = "[1,2,3]")
   private List<Long> essentialQuestionIds = new ArrayList<>();
-
-
-
+  @Builder
+  public ApplicationRequest(Long clubId, String title, String urlId,
+      List<Long> essentialQuestionIds) {
+    this.clubId = clubId;
+    this.title = title;
+    this.urlId = urlId;
+    this.essentialQuestionIds = essentialQuestionIds;
+  }
 }
