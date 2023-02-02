@@ -56,7 +56,7 @@ public class AuthIntegrationTest extends IntegrationTest {
   public void tokenReissueSuccess() throws Exception {
 
     //given
-    final TokenRequest tokenRequest = new TokenRequest(memberId, tokenResponse.getRefreshToken());
+    final TokenRequest tokenRequest = new TokenRequest(tokenResponse.getRefreshToken());
 
     requestBody = objectMapper.writeValueAsString(tokenRequest);
 

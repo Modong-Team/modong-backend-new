@@ -47,17 +47,26 @@ public class AuthService {
   @Transactional
   public TokenResponse createAccessToken(TokenRequest tokenRequest) {
 
-    //멤버 존재하는지 확인
-    Member findMember = memberRepository.findById(tokenRequest.getMemberId()).orElseThrow(() ->
-        new MemberNotFoundException(tokenRequest.getMemberId()));
-
     // refreshToken 유효성 검사
     if(!jwtTokenProvider.validateToken(tokenRequest.getRefreshToken())){
       throw new RefreshTokenNotValidException();
     }
+    // 토큰 정보 추출
+    Long memberId;
+    try{
+       memberId = Long.parseLong(jwtTokenProvider.getPayload(tokenRequest.getRefreshToken()));
+    }
+    catch (Exception e){ // Long으로 바꾸는데 에러가 발생한다면 Exception을 던짐.
+      throw new RefreshTokenNotValidException();
+    }
+
+    //멤버 존재하는지 확인
+    Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
+        new MemberNotFoundException(memberId));
+
     // memberId로 DB에 존재하는 토큰 찾은 후 요청으로 들어온 토큰과 같은지 비교
-    RefreshToken savedToken = refreshTokenRepository.findByMemberId(tokenRequest.getMemberId())
-        .orElseThrow(() ->  new RefreshTokenNotFoundException(tokenRequest.getMemberId()));
+    RefreshToken savedToken = refreshTokenRepository.findByMemberId(memberId)
+        .orElseThrow(() ->  new RefreshTokenNotFoundException(memberId));
 
     // 요청으로 받은 토큰과 DB에 존재하는 토큰 같은지 검사
     if(!tokenRequest.getRefreshToken().equals(savedToken.getRefreshToken())){

@@ -9,17 +9,14 @@ import lombok.Getter;
 @Builder
 @Schema(name = "토큰 재발행 요청")
 public class TokenRequest {
-
-  @NotNull
-  @Schema(description = "회원 ID",  example = "1")
-  private Long memberId;
-
   @NotNull
   @Schema(description = "로그인때 발급된 refresh 토큰")
   private String refreshToken;
 
-  public TokenRequest(Long memberId, String refreshToken) {
-    this.memberId = memberId;
+  public TokenRequest(String refreshToken) {
     this.refreshToken = refreshToken;
+  }
+
+  public TokenRequest() {
   }
 }

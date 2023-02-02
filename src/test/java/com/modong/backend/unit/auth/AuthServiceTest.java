@@ -113,12 +113,14 @@ public class AuthServiceTest extends ServiceTest {
   @Test
   public void returnNewTokenIfRefreshTokenIsValid(){
     //given
-    TokenRequest tokenRequest = new TokenRequest(MemberFixture.ID,REFRESH_TOKEN);
+    TokenRequest tokenRequest = new TokenRequest(REFRESH_TOKEN);
 
-    given(memberRepository.findById(anyLong()))
-        .willReturn(Optional.of(member));
     given(jwtTokenProvider.validateToken(anyString()))
         .willReturn(true);
+    given(jwtTokenProvider.getPayload(anyString()))
+        .willReturn(MemberFixture.ID.toString());
+    given(memberRepository.findById(anyLong()))
+        .willReturn(Optional.of(member));
     given(refreshTokenRepository.findByMemberId(MemberFixture.ID))
         .willReturn(Optional.of(new RefreshToken(REFRESH_TOKEN,MemberFixture.ID)));
 
@@ -134,9 +136,15 @@ public class AuthServiceTest extends ServiceTest {
   @Test
   public void throwExceptionIfMemberIsNotFound(){
     //given,when
-    TokenRequest tokenRequest = new TokenRequest(MemberFixture.ID,REFRESH_TOKEN);
+    TokenRequest tokenRequest = new TokenRequest(REFRESH_TOKEN);
+
+    given(jwtTokenProvider.validateToken(anyString()))
+        .willReturn(true);
+    given(jwtTokenProvider.getPayload(anyString()))
+        .willReturn(MemberFixture.ID.toString());
     given(memberRepository.findById(anyLong()))
         .willReturn(Optional.empty());
+
 
     //then
     assertThatThrownBy(() -> authService.createAccessToken(tokenRequest))
@@ -146,12 +154,14 @@ public class AuthServiceTest extends ServiceTest {
   @Test
   public void throwExceptionIfRefreshTokenIsNotValid(){
     //given, when
-    TokenRequest tokenRequest = new TokenRequest(MemberFixture.ID,REFRESH_TOKEN);
+    TokenRequest tokenRequest = new TokenRequest(REFRESH_TOKEN);
 
-    given(memberRepository.findById(anyLong()))
-        .willReturn(Optional.of(member));
     given(jwtTokenProvider.validateToken(anyString()))
         .willReturn(false);
+    given(jwtTokenProvider.getPayload(anyString()))
+        .willReturn(MemberFixture.ID.toString());
+    given(memberRepository.findById(anyLong()))
+        .willReturn(Optional.of(member));
 
     //then
     assertThatThrownBy(() -> authService.createAccessToken(tokenRequest))
@@ -161,12 +171,14 @@ public class AuthServiceTest extends ServiceTest {
   @Test
   public void throwExceptionIfRefreshTokenIsNotMatch(){
     //given, when
-    TokenRequest tokenRequest = new TokenRequest(MemberFixture.ID,WRONG_REFRESH_TOKEN);
+    TokenRequest tokenRequest = new TokenRequest(WRONG_REFRESH_TOKEN);
 
-    given(memberRepository.findById(anyLong()))
-        .willReturn(Optional.of(member));
     given(jwtTokenProvider.validateToken(anyString()))
         .willReturn(true);
+    given(jwtTokenProvider.getPayload(anyString()))
+        .willReturn(MemberFixture.ID.toString());
+    given(memberRepository.findById(anyLong()))
+        .willReturn(Optional.of(member));
     given(refreshTokenRepository.findByMemberId(anyLong()))
         .willReturn(Optional.of(new RefreshToken(REFRESH_TOKEN,MemberFixture.ID)));
 
@@ -178,12 +190,14 @@ public class AuthServiceTest extends ServiceTest {
   @Test
   public void throwExceptionIfRefreshTokenIsNotFound(){
     //given,when
-    TokenRequest tokenRequest = new TokenRequest(MemberFixture.ID,REFRESH_TOKEN);
+    TokenRequest tokenRequest = new TokenRequest(REFRESH_TOKEN);
 
-    given(memberRepository.findById(anyLong()))
-        .willReturn(Optional.of(member));
     given(jwtTokenProvider.validateToken(anyString()))
         .willReturn(true);
+    given(jwtTokenProvider.getPayload(anyString()))
+        .willReturn(MemberFixture.ID.toString());
+    given(memberRepository.findById(anyLong()))
+        .willReturn(Optional.of(member));
     given(refreshTokenRepository.findByMemberId(anyLong()))
         .willReturn(Optional.empty());
 

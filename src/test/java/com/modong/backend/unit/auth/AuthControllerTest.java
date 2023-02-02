@@ -141,7 +141,7 @@ public class AuthControllerTest extends ControllerTest {
   @Test
   public void returnTokenWithStatusOKIfTokenRequestValid() throws Exception{
     //given
-    TokenRequest tokenRequest = new TokenRequest(MemberFixture.ID,REFRESH_TOKEN);
+    TokenRequest tokenRequest = new TokenRequest(REFRESH_TOKEN);
 
     requestBody = objectMapper.writeValueAsString(tokenRequest);
 
@@ -166,7 +166,7 @@ public class AuthControllerTest extends ControllerTest {
   @Test
   public void throwExceptionIfMemberIdNotFound() throws Exception{
     //given
-    TokenRequest tokenRequest = new TokenRequest(MemberFixture.ID,REFRESH_TOKEN);
+    TokenRequest tokenRequest = new TokenRequest(REFRESH_TOKEN);
 
     requestBody = objectMapper.writeValueAsString(tokenRequest);
 
@@ -187,7 +187,7 @@ public class AuthControllerTest extends ControllerTest {
   @Test
   public void throwExceptionIfRefreshTokenNotValid() throws Exception{
     //given
-    TokenRequest tokenRequest = new TokenRequest(MemberFixture.ID,REFRESH_TOKEN);
+    TokenRequest tokenRequest = new TokenRequest(REFRESH_TOKEN);
 
     requestBody = objectMapper.writeValueAsString(tokenRequest);
 

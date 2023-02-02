@@ -4,6 +4,7 @@ import com.modong.backend.Enum.CustomCode;
 import com.modong.backend.auth.member.Dto.MemberCheckRequest;
 import com.modong.backend.auth.member.Dto.MemberRegisterRequest;
 import com.modong.backend.auth.member.Dto.MemberResponse;
+import com.modong.backend.auth.support.Auth;
 import com.modong.backend.base.Dto.BaseResponse;
 import com.modong.backend.base.Dto.CheckResponse;
 import com.modong.backend.base.Dto.SavedId;
@@ -41,11 +42,11 @@ public class MemberController {
     return ResponseEntity.created(URI.create("/api/v1/member/" + savedId.getId())).body(new BaseResponse(savedId,HttpStatus.CREATED.value(),CustomCode.SUCCESS_CREATE));
   }
 
-  @GetMapping("/member/{memberId}")
-  @Operation(summary = "회원 조회", description = "회원 id로 회원을 조회한다.", responses = {
+  @GetMapping("/member")
+  @Operation(summary = "회원 조회", description = "Access Token 으로 회원을 조회한다.", responses = {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = MemberResponse.class)))
   })
-  public ResponseEntity findById(@PathVariable final Long memberId){
+  public ResponseEntity findById(@Auth final Long memberId){
     MemberResponse memberResponse = memberService.findById(memberId);
     return ResponseEntity.ok(new BaseResponse(memberResponse, HttpStatus.OK.value(), CustomCode.SUCCESS_GET));
   }

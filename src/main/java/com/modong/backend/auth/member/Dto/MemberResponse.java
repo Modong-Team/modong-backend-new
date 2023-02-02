@@ -20,7 +20,7 @@ public class MemberResponse {
 
   public MemberResponse(Member member) {
     this.id = member.getId();
-    this.memberId = getMemberId();
+    this.memberId = member.getMemberId();
     this.name = member.getName();
     this.email = member.getEmail();
     this.phone = member.getPhone();
