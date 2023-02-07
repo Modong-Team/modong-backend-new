@@ -6,7 +6,7 @@ import com.modong.backend.auth.memberRole.MemberRole;
 import com.modong.backend.auth.role.Role;
 import com.modong.backend.base.BaseTimeEntity;
 import com.modong.backend.domain.club.clubMemeber.ClubMember;
-import com.modong.backend.domain.judge.Judge;
+import com.modong.backend.domain.Evaluation.Evaluation;
 import java.util.ArrayList;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -40,7 +40,7 @@ public class Member extends BaseTimeEntity {
   private List<ClubMember> clubs = new ArrayList<>();
 
   @OneToMany(mappedBy = "member")
-  private List<Judge> judges = new ArrayList<>();
+  private List<Evaluation> evaluations = new ArrayList<>();
 
   @OneToMany(mappedBy = "member")
   private List<MemberRole> roles = new ArrayList<>();

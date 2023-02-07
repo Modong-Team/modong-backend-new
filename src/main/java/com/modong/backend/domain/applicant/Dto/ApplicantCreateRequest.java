@@ -10,11 +10,12 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @Schema(name = "지원자 생성 요청")
-public class ApplicantRequest {
+@NoArgsConstructor
+public class ApplicantCreateRequest {
 
   @NotNull
   @Schema(description = "지원서 ID",  example = "1")
@@ -31,4 +32,13 @@ public class ApplicantRequest {
   @Schema(description = "질문 답변들")
   private List<QuestionAnswerRequest> questionAnswers = new ArrayList<>();
 
+
+  @Builder
+  public ApplicantCreateRequest(Long applicationId, String name,
+      List<EssentialAnswerRequest> essentialAnswers, List<QuestionAnswerRequest> questionAnswers) {
+    this.applicationId = applicationId;
+    this.name = name;
+    this.essentialAnswers = essentialAnswers;
+    this.questionAnswers = questionAnswers;
+  }
 }

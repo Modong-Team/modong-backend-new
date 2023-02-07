@@ -1,6 +1,8 @@
 package com.modong.backend.domain.application;
 
-import com.modong.backend.domain.application.Dto.ApplicationRequest;
+import com.modong.backend.Enum.StatusCode;
+import com.modong.backend.domain.application.Dto.ApplicationCreateRequest;
+import com.modong.backend.domain.application.Dto.ApplicationUpdateRequest;
 import com.modong.backend.domain.applicationEssential.ApplicationEssential;
 import com.modong.backend.base.BaseTimeEntity;
 import com.modong.backend.domain.club.Club;
@@ -9,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,6 +38,9 @@ public class Application extends BaseTimeEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Club club;
 
+  @Enumerated(EnumType.STRING)
+  private StatusCode statusCode = StatusCode.OPEN;
+
   @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ApplicationEssential> essentials = new ArrayList<>();
 
@@ -42,10 +49,10 @@ public class Application extends BaseTimeEntity {
 
 
 
-  public Application(ApplicationRequest applicationRequest, Club club) {
-    this.title = applicationRequest.getTitle();
+  public Application(ApplicationCreateRequest ApplicationCreateRequest, Club club) {
+    this.title = ApplicationCreateRequest.getTitle();
     this.club = club;
-    this.urlId = applicationRequest.getUrlId();
+    this.urlId = ApplicationCreateRequest.getUrlId();
   }
 
   public void addEssential(ApplicationEssential applicationEssential){
@@ -56,11 +63,27 @@ public class Application extends BaseTimeEntity {
     this.forms.add(form);
   }
 
-  public void update(ApplicationRequest applicationRequest) {
-    this.title = applicationRequest.getTitle();
+  public void update(ApplicationUpdateRequest applicationUpdateRequest) {
+    this.title = applicationUpdateRequest.getTitle();
   }
 
   public void initEssentials() {
     this.essentials.remove(this.essentials);
+  }
+
+  public void open() {
+    statusCode = StatusCode.OPEN;
+  }
+
+  public void close() {
+    statusCode = StatusCode.CLOSE;
+  }
+
+  public boolean eqStatus(StatusCode statusCode){
+    return this.statusCode == statusCode;
+  }
+
+  public boolean checkApplicationClosed(){
+    return this.statusCode.equals(StatusCode.CLOSE);
   }
 }

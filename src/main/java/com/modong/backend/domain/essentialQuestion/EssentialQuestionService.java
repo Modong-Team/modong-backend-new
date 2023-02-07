@@ -4,6 +4,7 @@ import static com.modong.backend.Enum.CustomCode.ERROR_REQ_PARAM_ID;
 
 import com.modong.backend.domain.applicationEssential.ApplicationEssentialService;
 import com.modong.backend.domain.essentialQuestion.Dto.EssentialQuestionResponse;
+import com.modong.backend.global.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +20,12 @@ public class EssentialQuestionService {
   private final ApplicationEssentialService applicationEssentialService;
   public EssentialQuestion findById(Long essentialQuestionId) {
     EssentialQuestion essentialQuestion = essentialQuestionRepository.findById(essentialQuestionId)
-        .orElseThrow(() -> new IllegalArgumentException(ERROR_REQ_PARAM_ID.toString()));
+        .orElseThrow(() -> new ResourceNotFoundException("필수질문",essentialQuestionId));
     return essentialQuestion;
   }
 
 //  @Transactional
-//  public Long create(EssentialQuestionRequest essentialQuestionRequest, Application application) {
+//  public Long create(EssentialQuestionRequest essentialQuestionRequest, application application) {
 //    EssentialQuestion essentialQuestion = new EssentialQuestion(essentialQuestionRequest);
 //
 //    essentialQuestionRepository.save(essentialQuestion);

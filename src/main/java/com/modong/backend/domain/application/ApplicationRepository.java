@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface ApplicationRepository extends JpaRepository<Application,Long> {
 
+  Optional<Application> findById(Long id);
   List<Application> findAllByClubId(Long clubId);
 
   Optional<Application> findByUrlId(String urlId);
+  boolean existsByUrlId(String urlId);
 }

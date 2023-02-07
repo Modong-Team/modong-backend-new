@@ -1,11 +1,11 @@
 package com.modong.backend.domain.applicant;
 
-import com.modong.backend.domain.applicant.Dto.ApplicantRequest;
+import com.modong.backend.domain.applicant.Dto.ApplicantCreateRequest;
 import com.modong.backend.domain.application.Application;
 import com.modong.backend.base.BaseTimeEntity;
 import com.modong.backend.Enum.ApplicantStatus;
 import com.modong.backend.domain.essentialAnswer.EssentialAnswer;
-import com.modong.backend.domain.judge.Judge;
+import com.modong.backend.domain.Evaluation.Evaluation;
 import com.modong.backend.domain.questionAnswer.QuestionAnswer;
 import java.util.ArrayList;
 import javax.persistence.Entity;
@@ -49,10 +49,10 @@ public class Applicant extends BaseTimeEntity {
   private List<QuestionAnswer> questionAnswers = new ArrayList<>();
 
   @OneToMany(mappedBy = "applicant")
-  private List<Judge> judges = new ArrayList<>();
+  private List<Evaluation> evaluations = new ArrayList<>();
 
-  public Applicant(ApplicantRequest applicantRequest, Application application) {
-    this.name = applicantRequest.getName();
+  public Applicant(ApplicantCreateRequest applicantCreateRequest, Application application) {
+    this.name = applicantCreateRequest.getName();
     this.application = application;
     this.applicantStatus = ApplicantStatus.ACCEPT;
     this.rate = 0f;
@@ -64,5 +64,9 @@ public class Applicant extends BaseTimeEntity {
 
   public void fail(){
     this.isFail = true;
+  }
+
+  public void cancelFail() {
+    this.isFail = false;
   }
 }

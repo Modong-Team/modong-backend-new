@@ -1,4 +1,4 @@
-package com.modong.backend.domain.judge;
+package com.modong.backend.domain.Evaluation;
 
 import com.modong.backend.domain.applicant.Applicant;
 import com.modong.backend.auth.member.Member;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Judge {
+public class Evaluation {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

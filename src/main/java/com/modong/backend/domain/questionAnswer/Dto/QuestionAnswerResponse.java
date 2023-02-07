@@ -7,13 +7,18 @@ import lombok.Getter;
 @Getter
 @Schema(name = "질문 답변")
 public class QuestionAnswerResponse {
+
+  @Schema(description = "질문 id")
+  private Long id;
+
   @Schema(description = "질문")
-  private String Question;
+  private String question;
   @Schema(description = "질문 답변 ")
-  private String Answer;
+  private String answer;
 
   public QuestionAnswerResponse(QuestionAnswer questionAnswer) {
-    this.Question = questionAnswer.getQuestion().getContent();
-    this.Answer = questionAnswer.getAnswer();
+    this.id = questionAnswer.getQuestion().getId();
+    this.question = questionAnswer.getQuestion().getContent();
+    this.answer = questionAnswer.getAnswer();
   }
 }

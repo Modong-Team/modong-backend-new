@@ -1,17 +1,32 @@
 package com.modong.backend.unit.base;
 
+import static com.modong.backend.Fixtures.ApplicationFixture.E_QUESTION_ID_LIST;
+import static com.modong.backend.Fixtures.ApplicationFixture.TITLE;
+import static com.modong.backend.Fixtures.ApplicationFixture.UPDATE_E_QUESTION_ID_LIST;
+import static com.modong.backend.Fixtures.ApplicationFixture.UPDATE_TITLE;
+import static com.modong.backend.Fixtures.ApplicationFixture.URL_ID;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_CODE;
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_ID;
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_NAME;
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_PROFILE_IMG_URL;
 import static com.modong.backend.Fixtures.MemberFixture.EMAIL;
 import static com.modong.backend.Fixtures.MemberFixture.MEMBER_ID;
 import static com.modong.backend.Fixtures.MemberFixture.NAME;
 import static com.modong.backend.Fixtures.MemberFixture.PASSWORD;
 import static com.modong.backend.Fixtures.MemberFixture.PHONE;
 
+import com.modong.backend.Fixtures.ApplicationFixture;
 import com.modong.backend.auth.member.Dto.MemberRegisterRequest;
 import com.modong.backend.auth.JwtTokenProvider;
 import com.modong.backend.auth.member.MemberRepository;
 import com.modong.backend.auth.refreshToken.RefreshTokenRepository;
+import com.modong.backend.domain.application.ApplicationRepository;
+import com.modong.backend.domain.application.Dto.ApplicationCreateRequest;
+import com.modong.backend.domain.application.Dto.ApplicationUpdateRequest;
 import com.modong.backend.domain.club.ClubRepository;
+import com.modong.backend.domain.club.Dto.ClubCreateRequest;
+import com.modong.backend.domain.essentialQuestion.EssentialQuestion;
+import com.modong.backend.domain.essentialQuestion.EssentialQuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,6 +51,12 @@ public class ServiceTest {
   @MockBean
   protected RefreshTokenRepository refreshTokenRepository;
 
+  @MockBean
+  protected EssentialQuestionRepository essentialQuestionRepository;
+
+  @MockBean
+  protected ApplicationRepository applicationRepository;
+
   @Autowired
   protected PasswordEncoder passwordEncoder;
 
@@ -44,4 +65,11 @@ public class ServiceTest {
   protected MemberRegisterRequest memberRegisterRequest = MemberRegisterRequest.builder()
       .memberId(MEMBER_ID).email(EMAIL).password(PASSWORD)
       .phone(PHONE).name(NAME).clubCode(CLUB_CODE).build();
+  
+  protected ClubCreateRequest clubCreateRequest = ClubCreateRequest.builder()
+      .name(CLUB_NAME).profileImgUrl(CLUB_PROFILE_IMG_URL).build();
+  protected ApplicationCreateRequest applicationCreateRequest = ApplicationCreateRequest.builder()
+      .title(TITLE).clubId(CLUB_ID).essentialQuestionIds(E_QUESTION_ID_LIST).urlId(URL_ID).build();
+  protected ApplicationUpdateRequest applicationUpdateRequest = ApplicationUpdateRequest.builder()
+      .title(UPDATE_TITLE).essentialQuestionIds(UPDATE_E_QUESTION_ID_LIST).build();
 }

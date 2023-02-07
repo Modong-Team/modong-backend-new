@@ -10,6 +10,8 @@ import lombok.Getter;
 @Getter
 @Schema(name = "지원자 간단 조회")
 public class ApplicantSimpleResponse {
+  @Schema(description = "지원서 id", example = "1")
+  private Long ApplicationId;
   @Schema(description = "지원자 id",  example = "1")
   private Long id;
   @Schema(description = "이름",  example = "아무개")
@@ -24,6 +26,7 @@ public class ApplicantSimpleResponse {
   private boolean isFail;
 
   public ApplicantSimpleResponse(Applicant applicant) {
+    this.ApplicationId = applicant.getApplication().getId();
     this.id = applicant.getId();
     this.name = applicant.getName();
     this.rate = applicant.getRate();

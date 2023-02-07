@@ -7,12 +7,16 @@ import lombok.Getter;
 @Getter
 @Schema(name = "필수 질문 응답")
 public class EssentialAnswerResponse {
+  @Schema(description = "필수 질문 id")
+  private Long id;
+
   @Schema(description = "필수 질문")
   private String essentialQuestion;
   @Schema(description = "필수 질문 답변")
   private String essentialAnswer;
 
   public EssentialAnswerResponse(EssentialAnswer essentialAnswer) {
+    this.id = essentialAnswer.getEssentialQuestion().getId();
     this.essentialQuestion = essentialAnswer.getEssentialQuestion().getContent();
     this.essentialAnswer = essentialAnswer.getAnswer();
   }

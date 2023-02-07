@@ -14,9 +14,13 @@ public class ApplicationSimpleResponse {
   @Schema(description = "지원서 링크 아이디", example = "9CJOj71S1o")
   private String urlId;
 
+  @Schema(description = "지원서 모집/마감 여부", example = "open/close")
+  private String status;
+
   public ApplicationSimpleResponse(Application application) {
     this.id = application.getId();
     this.title = application.getTitle();
     this.urlId = application.getUrlId();
+    this.status = application.getStatusCode().toString();
   }
 }
