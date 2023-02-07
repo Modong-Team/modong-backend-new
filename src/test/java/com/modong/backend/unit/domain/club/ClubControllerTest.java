@@ -1,5 +1,6 @@
 package com.modong.backend.unit.domain.club;
 
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_CODE;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_ID;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_NAME;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_PROFILE_IMG_URL;
@@ -15,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.modong.backend.domain.club.Club;
+import com.modong.backend.domain.club.Dto.ClubCheckRequest;
 import com.modong.backend.domain.club.ClubController;
 import com.modong.backend.domain.club.Dto.ClubCreateResponse;
 import com.modong.backend.domain.club.Dto.ClubCreateRequest;
@@ -103,5 +105,51 @@ public class ClubControllerTest extends ControllerTest {
     perform
         .andDo(print())
         .andExpect(status().isNotFound());
+  }
+
+  @DisplayName("동아리 코드 존재검사 성공 - DB에 없는 동아리 코드를 사용할 경우 false 를 반환해야 한다.")
+  @WithMockUser
+  @Test
+  public void returnFalseWithStatusOKIfClubNotExist() throws Exception {
+    // given
+    ClubCheckRequest clubCheckRequest = new ClubCheckRequest(CLUB_CODE);
+    boolean result = false;
+    requestBody = objectMapper.writeValueAsString(clubCheckRequest);
+
+    given(clubService.checkClubCode(any())).willReturn(result);
+
+    // when
+    ResultActions perform = mockMvc.perform(post("/api/v1/club/check")
+        .contentType(MediaType.APPLICATION_JSON).with(csrf())
+        .content(requestBody));
+
+    // then
+    perform
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("data.exists").value(result));
+  }
+
+  @DisplayName("동아리 코드 존재검사 성공 - DB에 있는 동아리 코드를 사용할 경우 true 를 반환해야 한다.")
+  @WithMockUser
+  @Test
+  public void returnTrueWithStatusOKIfClubExist() throws Exception {
+    // given
+    ClubCheckRequest clubCheckRequest = new ClubCheckRequest(CLUB_CODE);
+    boolean result = true;
+    requestBody = objectMapper.writeValueAsString(clubCheckRequest);
+
+    given(clubService.checkClubCode(any())).willReturn(result);
+
+    // when
+    ResultActions perform = mockMvc.perform(post("/api/v1/club/check")
+        .contentType(MediaType.APPLICATION_JSON).with(csrf())
+        .content(requestBody));
+
+    // then
+    perform
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("data.exists").value(result));
   }
 }

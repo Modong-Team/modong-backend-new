@@ -36,11 +36,11 @@ public class CorsFilter implements Filter {
     HttpServletRequest req = (HttpServletRequest)request;
     HttpServletResponse res = (HttpServletResponse)response;
 
-    String requestMethod = req.getMethod();
-    String remoteUser = req.getRemoteUser();
-    String userAgent = req.getHeader("user-agent");
-    String host = req.getHeader("host");
-    String originUri = req.getRequestURI();
+//    String requestMethod = req.getMethod();
+//    String remoteUser = req.getRemoteUser();
+//    String userAgent = req.getHeader("user-agent");
+//    String host = req.getHeader("host");
+//    String originUri = req.getRequestURI();
     String originUrl = req.getHeader("Origin");
 
     if(originUrl == null) {

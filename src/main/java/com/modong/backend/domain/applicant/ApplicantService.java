@@ -102,9 +102,9 @@ public class ApplicantService {
   public PageApplicantsResponse filterByCondition(Long applicationId,
       SearchApplicantRequest searchApplicantRequest, Pageable pageable) {
     Page<Applicant> applicants = applicantRepositoryCustom.searchByApplicationIdAndStatus(applicationId,searchApplicantRequest,pageable);
-    if(applicants.isEmpty()){
-      throw new ResourceNotFoundException("조건에 맞는 지원자들 조회 결과 없음");
-    }
+//    if(applicants.isEmpty()){
+//      throw new ResourceNotFoundException("조건에 맞는 지원자들 조회 결과 없음");
+//    }
     return new PageApplicantsResponse(applicants);
   }
 

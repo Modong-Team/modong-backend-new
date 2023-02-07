@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,6 +56,6 @@ public class MemberController {
   })
   public ResponseEntity checkMemberId(@RequestBody @Validated MemberCheckRequest memberCheckRequest){
     CheckResponse checkResponse = new CheckResponse(memberService.checkMemberId(memberCheckRequest));
-    return ResponseEntity.ok(new BaseResponse(checkResponse, HttpStatus.OK.value(), CustomCode.SUCCESS_CHECK));
+    return ResponseEntity.ok(new BaseResponse(checkResponse, HttpStatus.OK.value(), CustomCode.SUCCESS_DUPLICATED_CHECK));
   }
 }

@@ -1,7 +1,7 @@
 package com.modong.backend.global.exception.auth;
 
+
 import com.modong.backend.global.exception.BadRequestException;
-import org.springframework.http.HttpStatus;
 
 public class PasswordMismatchException extends BadRequestException {
   private static final String SERVER_MESSAGE = "비밀번호를 잘못입력했습니다.";

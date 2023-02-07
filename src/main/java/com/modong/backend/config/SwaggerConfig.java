@@ -3,9 +3,9 @@ package com.modong.backend.config;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,27 +37,14 @@ public class SwaggerConfig {
         .pathsToExclude("/actuator/**")
         .build();
   }
-
-//  @Bean
-//  public Docket api() {
-//    Server prodServer = new Server("prod url","https://api.exhelper.site","modong prod server",
-//        Collections.emptyList(),Collections.emptyList());
-//    Server localServer = new Server("local url","http://localhost:8080","modong local server",Collections.emptyList(),Collections.emptyList());
-//    return new Docket(DocumentationType.OAS_30)
-//        .servers(prodServer,localServer)
-//        .useDefaultResponseMessages(false)
-//        .select()
-//        .apis(RequestHandlerSelectors.basePackage("com.modong.backend"))
-//        .paths(PathSelectors.any())
-//        .build()
-//        .apiInfo(apiInfo());
-//  }
   @Bean
   public OpenAPI customOpenAPI(@Value("${springdoc.version}") String appVersion) {
     return new OpenAPI()
         .components(new Components())
         .info(new Info().title("Modong API Docs")
-            .description("모두의 동아리 서비스에서 사용하는 API를 정리한 문서").version(appVersion));
+            .description("모두의 동아리 서비스에서 사용하는 API를 정리한 문서").version(appVersion))
+        .addServersItem(makeServer("https://api.linko.site", "Linko API 서버"))
+        .addServersItem(makeServer("http://localhost:8080" ,"Local 테스트 용"));
   }
   @Bean
   public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(
@@ -79,5 +66,12 @@ public class SwaggerConfig {
   private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties, Environment environment, String basePath) {
     return webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath) || ManagementPortType.get(environment).equals(
         ManagementPortType.DIFFERENT));
+  }
+
+  private Server makeServer(final String url, final String description){
+    Server server = new Server();
+    server.setUrl(url);
+    server.setDescription(description);
+    return server;
   }
 }

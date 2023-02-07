@@ -63,10 +63,7 @@ public class MemberService {
     return new MemberResponse(member);
   }
   public boolean checkMemberId(MemberCheckRequest memberCheckRequest){
-    if(isDuplicateMemberId(memberCheckRequest.getMemberId())){
-      throw new DuplicateMemberIdException();
-    }
-    return true;
+    return isDuplicateMemberId(memberCheckRequest.getMemberId());
   }
 
 

@@ -55,30 +55,35 @@ public class MemberServiceTest extends ServiceTest {
 
   }
 
-  @DisplayName("중복 ID 체크 - MemberId가 중복이면 DuplicateMemberIdException 가 발생해야 한다.")
+  @DisplayName("중복 ID 체크 - MemberId가 중복이면 checkMemberId 함수가 true 를 반환해야 한다.")
   @Test
-  public void throwExceptionIfMemberIdExist(){
-    //given,when
+  public void returnTrueMemberIdIsDuplicated(){
+    //given
+    boolean expected = true;
+
     MemberCheckRequest memberCheckRequest = MemberCheckRequest.builder().memberId(MEMBER_ID).build();
 
     given(memberRepository.existsByMemberId(MEMBER_ID))
-        .willReturn(true);
-
+        .willReturn(expected);
+    //when
+    boolean result = memberService.checkMemberId(memberCheckRequest);
     //then
-    assertThatThrownBy(() -> memberService.checkMemberId(memberCheckRequest))
-        .isInstanceOf(DuplicateMemberIdException.class);
+    assertThat(expected).isEqualTo(result);
   }
 
-  @DisplayName("중복 ID 체크  - MemberId가 중복되지 않으면 예외가 발생하지 않아야 한다.")
+  @DisplayName("중복 ID 체크  - MemberId가 중복되지 않으면 checkMemberId 함수가 false 를 반환해야 한다.")
   @Test
-  public void passIfMemberIdNotExist(){
-    //given,when
+  public void returnFalseMemberIdIsNotDuplicated(){
+    //given
+    boolean expected = false;
+
     MemberCheckRequest memberCheckRequest = MemberCheckRequest.builder().memberId(MEMBER_ID).build();
     given(memberRepository.existsByMemberId(MEMBER_ID))
-        .willReturn(false);
+        .willReturn(expected);
+    //when
+    boolean result = memberService.checkMemberId(memberCheckRequest);
     //then
-    assertThatCode(() -> memberService.checkMemberId(memberCheckRequest))
-        .doesNotThrowAnyException();
+    assertThat(expected).isEqualTo(result);
   }
   @DisplayName("회원가입 - 동아리코드가 유효하면 정상적으로 가입이 완료돼야 한다. ")
   @Test

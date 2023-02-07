@@ -1,8 +1,6 @@
 package com.modong.backend.global.exception.auth;
 
-import com.modong.backend.global.exception.BadRequestException;
-
-public class RefreshTokenNotValidException extends BadRequestException {
+public class RefreshTokenNotValidException extends UnAuthorizedException {
 
   private static final String SERVER_MESSAGE = "유효하지 않은 토큰입니다.";
   private static final String ERROR_CODE = "REFRESH_TOKEN_IS_NOT_VALID";

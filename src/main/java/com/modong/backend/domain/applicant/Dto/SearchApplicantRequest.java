@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.data.domain.Pageable;
 
 @Data
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 public class SearchApplicantRequest{
 
   @NotNull
+  @Range(max = 5,min = 2, message = "지원사 상태값은 2에서 5사이의 숫자여야 합니다!")
   @Schema(description = "지원자 상태", example = "2")
   private int applicantStatusCode = 2;
 

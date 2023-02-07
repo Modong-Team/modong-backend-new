@@ -7,7 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.modong.backend.domain.club.Club;
-import com.modong.backend.domain.club.ClubCheckRequest;
+import com.modong.backend.domain.club.Dto.ClubCheckRequest;
 import com.modong.backend.domain.club.ClubService;
 import com.modong.backend.domain.club.Dto.ClubCreateResponse;
 import com.modong.backend.domain.club.Dto.ClubCreateRequest;
@@ -33,30 +33,38 @@ public class ClubServiceTest extends ServiceTest {
   public void init() {
   }
 
-  @DisplayName("ClubCode 유효성 체크 - 동아리코드로 등록된 동아리가 없으면 ClubNotFoundException 가 발생해야 한다.")
+  @DisplayName("ClubCode 유효성 체크 - 동아리코드로 등록된 동아리가 없으면 checkClubCode 함수가 false 를 반환해야 한다.")
   @Test
-  public void throwExceptionIfClubNotExist(){
+  public void returnFalseClubIsNotDuplicated(){
     //given
-    ClubCheckRequest clubCheckRequest = ClubCheckRequest.builder().ClubCode(clubCode).build();
-    //when
+    boolean expected = false;
+
+    ClubCheckRequest clubCheckRequest = ClubCheckRequest.builder().clubCode(clubCode).build();
+
     given(clubRepository.existsByClubCode(clubCode))
-        .willReturn(true);
+        .willReturn(expected);
+
+    //when
+    boolean result = clubService.checkClubCode(clubCheckRequest);
     //then
-    assertThatThrownBy(() -> clubService.checkClubCode(clubCheckRequest))
-        .isInstanceOf(ClubNotFoundException.class);
+    assertThat(expected).isEqualTo(result);
   }
 
-  @DisplayName("ClubCode 유효성 체크 - 동아리코드로 등록된 동아리가 있으면 예외가 발생하지 않아야 한다.")
+  @DisplayName("ClubCode 유효성 체크 - 동아리코드로 등록된 동아리가 있으면 checkClubCode 함수가 true 를 반환해야 한다.")
   @Test
-  public void passIfClubExist(){
-    //given,when
-    ClubCheckRequest clubCheckRequest = ClubCheckRequest.builder().ClubCode(clubCode).build();
+  public void returnTrueClubIsDuplicated(){
+    //given
+    boolean expected = true;
+
+    ClubCheckRequest clubCheckRequest = ClubCheckRequest.builder().clubCode(clubCode).build();
 
     given(clubRepository.existsByClubCode(clubCode))
-        .willReturn(false);
+        .willReturn(expected);
+    //when
+    boolean result = clubService.checkClubCode(clubCheckRequest);
+
     //then
-    assertThatCode(() -> clubService.checkClubCode(clubCheckRequest))
-        .doesNotThrowAnyException();
+    assertThat(expected).isEqualTo(result);
   }
 
   // 출처 - https://galid1.tistory.com/772 테스트는 독립적이여야 한다.

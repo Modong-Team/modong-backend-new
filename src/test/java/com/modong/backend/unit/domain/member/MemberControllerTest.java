@@ -44,13 +44,13 @@ public class MemberControllerTest extends ControllerTest {
         .memberId(MEMBER_ID).email(EMAIL).password(PASSWORD)
         .phone(PHONE).name(NAME).clubCode(CLUB_CODE).build();
   }
-  @DisplayName("회원 ID 중복검사 성공 - DB에 없는 회원 ID를 사용할 경우 true 를 반환한다.")
+  @DisplayName("회원 ID 중복검사 성공 - DB에 없는 회원 ID를 사용할 경우 false 를 반환해야 한다.")
   @WithMockUser
   @Test
-  public void returnTrueWithStatusOKIfMemberIDNotExist() throws Exception {
+  public void returnFalseWithStatusOKIfMemberIDNotExist() throws Exception {
     // given
     MemberCheckRequest memberCheckRequest = new MemberCheckRequest(MEMBER_ID);
-    Boolean result = true;
+    boolean result = false;
     requestBody = objectMapper.writeValueAsString(memberCheckRequest);
 
     given(memberService.checkMemberId(any())).willReturn(result);
@@ -64,18 +64,18 @@ public class MemberControllerTest extends ControllerTest {
     perform
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("data.result").value(result));
+        .andExpect(jsonPath("data.duplicated").value(result));
   }
-  @DisplayName("회원 ID 중복검사 실패 - DB에 있는 회원 ID를 요청으로 보낸 경우  를 반환한다.")
+  @DisplayName("회원 ID 중복검사 성공 - DB에 있는 회원 ID를 요청으로 보낸 경우 true 를 반환해야 한다.")
   @WithMockUser
   @Test
-  public void throwDuplicateMemberIdExceptionIfClubNotExist() throws Exception {
+  public void returnTrueWithStatusOKIfMemberIDExist() throws Exception {
     // given
     MemberCheckRequest memberCheckRequest = new MemberCheckRequest(MEMBER_ID);
+    boolean result = true;
     requestBody = objectMapper.writeValueAsString(memberCheckRequest);
-    DuplicateMemberIdException expected = new DuplicateMemberIdException();
 
-    given(memberService.checkMemberId(any())).willThrow(expected);
+    given(memberService.checkMemberId(any())).willReturn(result);
 
     // when
     ResultActions perform = mockMvc.perform(post("/api/v1/member/check")
@@ -83,7 +83,10 @@ public class MemberControllerTest extends ControllerTest {
         .content(requestBody));
 
     // then
-    perform.andExpect(status().isBadRequest());
+    perform
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("data.duplicated").value(result));
   }
 
   @DisplayName("회원가입 성공 - 유효한 동아리 코드와 알맞은 회원 데이터로 회원가입 요청이 오면 DB에 저장하고 201을 반환해야 한다.")

@@ -1,5 +1,6 @@
 package com.modong.backend.domain.club;
 
+import com.modong.backend.domain.club.Dto.ClubCheckRequest;
 import com.modong.backend.domain.club.Dto.ClubCreateRequest;
 import com.modong.backend.domain.club.Dto.ClubResponse;
 import com.modong.backend.domain.club.Dto.ClubCreateResponse;
@@ -23,10 +24,8 @@ public class ClubService {
     return new ClubResponse(club);
   }
 
-  public void checkClubCode(ClubCheckRequest clubCheckRequest){
-    if(isExistClubCode(clubCheckRequest.getClubCode())){
-      throw new ClubNotFoundException(clubCheckRequest.getClubCode());
-    }
+  public boolean checkClubCode(ClubCheckRequest clubCheckRequest){
+    return isExistClubCode(clubCheckRequest.getClubCode());
   }
 
   private boolean isExistClubCode(String clubCode) {
