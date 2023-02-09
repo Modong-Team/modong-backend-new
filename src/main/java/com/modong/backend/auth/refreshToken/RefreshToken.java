@@ -1,6 +1,7 @@
 package com.modong.backend.auth.refreshToken;
 
 import com.modong.backend.auth.member.Member;
+import com.modong.backend.base.BaseTimeEntity;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RefreshToken {
+public class RefreshToken extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -29,6 +30,9 @@ public class RefreshToken {
   public RefreshToken(String refreshToken, Long memberId) {
     this.refreshToken = refreshToken;
     this.memberId = memberId;
+  }
+  public void update(String token){
+    this.refreshToken = token;
   }
 
 }

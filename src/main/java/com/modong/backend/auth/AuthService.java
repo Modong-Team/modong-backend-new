@@ -65,19 +65,18 @@ public class AuthService {
         new MemberNotFoundException(memberId));
 
     // memberId로 DB에 존재하는 토큰 찾은 후 요청으로 들어온 토큰과 같은지 비교
-    RefreshToken savedToken = refreshTokenRepository.findByMemberId(memberId)
+    RefreshToken findToken = refreshTokenRepository.findByMemberId(memberId)
         .orElseThrow(() ->  new RefreshTokenNotFoundException(memberId));
 
     // 요청으로 받은 토큰과 DB에 존재하는 토큰 같은지 검사
-    if(!tokenRequest.getRefreshToken().equals(savedToken.getRefreshToken())){
+    if(!tokenRequest.getRefreshToken().equals(findToken.getRefreshToken())){
       throw new RefreshTokenNotValidException();
     }
 
-    RefreshToken newToken = new RefreshToken(issueRefreshToken(findMember), findMember.getId());
+    findToken.update(issueRefreshToken(findMember));
+    refreshTokenRepository.save(findToken);
 
-    refreshTokenRepository.save(newToken);
-
-    return new TokenResponse(findMember.getId(), issueAccessToken(findMember), newToken.getRefreshToken());
+    return new TokenResponse(findMember.getId(), issueAccessToken(findMember), findToken.getRefreshToken());
 
   }
 
