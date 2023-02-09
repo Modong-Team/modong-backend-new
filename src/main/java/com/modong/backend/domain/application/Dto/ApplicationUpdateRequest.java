@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Schema(name = "지원서 생성 요청")
+@Schema(name = "지원서 수정 요청")
 public class ApplicationUpdateRequest {
 
   @NotBlank

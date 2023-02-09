@@ -3,8 +3,13 @@ package com.modong.backend.config;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.SecurityScheme.In;
+import io.swagger.v3.oas.models.security.SecurityScheme.Type;
 import io.swagger.v3.oas.models.servers.Server;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import org.springdoc.core.GroupedOpenApi;
@@ -39,12 +44,26 @@ public class SwaggerConfig {
   }
   @Bean
   public OpenAPI customOpenAPI(@Value("${springdoc.version}") String appVersion) {
+
+    SecurityScheme securityScheme = new SecurityScheme().type(Type.HTTP)
+        .scheme("bearer").bearerFormat("JWT").in(In.HEADER).name("Authorization");
+
+    Components components = new Components().addSecuritySchemes("bearerAuth", securityScheme);
+
+    List<SecurityRequirement> securityRequirements = Arrays.asList(new SecurityRequirement().addList("bearerAuth"));
+
+
+    Info info = new Info().title("Modong API Docs")
+        .description("모두의 동아리 서비스에서 사용하는 API를 정리한 문서").version(appVersion);
+
+    List<Server> servers = Arrays.asList(makeServer("https://api.linko.site", "Linko API 서버")
+        ,makeServer("http://localhost:8080" ,"Local 테스트 용"));
+
     return new OpenAPI()
-        .components(new Components())
-        .info(new Info().title("Modong API Docs")
-            .description("모두의 동아리 서비스에서 사용하는 API를 정리한 문서").version(appVersion))
-        .addServersItem(makeServer("https://api.linko.site", "Linko API 서버"))
-        .addServersItem(makeServer("http://localhost:8080" ,"Local 테스트 용"));
+        .components(components)
+        .security(securityRequirements)
+        .info(info)
+        .servers(servers);
   }
   @Bean
   public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(

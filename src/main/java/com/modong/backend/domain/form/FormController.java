@@ -1,6 +1,5 @@
 package com.modong.backend.domain.form;
 
-import com.modong.backend.auth.Dto.TokenResponse;
 import com.modong.backend.base.Dto.BaseResponse;
 import com.modong.backend.base.Dto.SavedId;
 import com.modong.backend.Enum.CustomCode;
@@ -12,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,11 +36,11 @@ public class FormController {
   //페이지 생성
   @PostMapping("/form")
   @Operation(summary = "페이지 생성", description = "지원서에 새로운 페이지를 저장한다. 질문 유형 QUESTION(1), SINGLE_SELECT_QUESTION(2), MULTI_SELECT_QUESTION(3)", responses = {
-      @ApiResponse(responseCode = "200", description = "질문 페이지 생성 성공", content = @Content(schema = @Schema(implementation = SavedId.class)))
+      @ApiResponse(responseCode = "201", description = "질문 페이지 생성 성공", content = @Content(schema = @Schema(implementation = SavedId.class)))
   })
   public ResponseEntity createForm(@Valid @RequestBody FormRequest formRequest){
       SavedId savedId = new SavedId(formService.create(formRequest));
-      return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.CREATED.value(), CustomCode.SUCCESS_CREATE));
+      return ResponseEntity.created(URI.create("/api/v1/form/" + savedId.getId())).body(new BaseResponse(savedId, HttpStatus.CREATED.value(), CustomCode.SUCCESS_CREATE));
   }
   //페이지 수정
   @PutMapping("/form/{form_id}")

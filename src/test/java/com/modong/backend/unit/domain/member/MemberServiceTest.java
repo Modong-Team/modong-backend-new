@@ -21,7 +21,6 @@ import com.modong.backend.auth.member.MemberService;
 import com.modong.backend.domain.club.Club;
 import com.modong.backend.domain.club.Dto.ClubCreateRequest;
 import com.modong.backend.global.exception.club.ClubNotFoundException;
-import com.modong.backend.global.exception.member.DuplicateMemberIdException;
 import com.modong.backend.global.exception.member.MemberNotFoundException;
 import com.modong.backend.unit.base.ServiceTest;
 import java.util.Optional;

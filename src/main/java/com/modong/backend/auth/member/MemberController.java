@@ -34,7 +34,7 @@ public class MemberController {
 
   @PostMapping("/register")
   @Operation(summary = "회원가입", description = "동아리 코드 및 회원가입에 필요한 데이터들과 함께 회원가입을 한다.", responses = {
-      @ApiResponse(responseCode = "200", description = "회원가입 성공", content = @Content(schema = @Schema(implementation = SavedId.class)))
+      @ApiResponse(responseCode = "201", description = "회원가입 성공", content = @Content(schema = @Schema(implementation = SavedId.class)))
   })
   public ResponseEntity saveMember(@RequestBody @Validated MemberRegisterRequest memberRegisterRequest){
     SavedId savedId = new SavedId(memberService.register(memberRegisterRequest));

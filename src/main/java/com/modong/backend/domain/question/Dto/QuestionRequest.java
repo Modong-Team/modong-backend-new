@@ -1,6 +1,7 @@
 package com.modong.backend.domain.question.Dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
@@ -19,6 +20,6 @@ public class QuestionRequest {
   private String content;
 
   @Schema(description = "질문 옵션", nullable = true, type = "List", example = "[질문 1,질문 2, 질문 3, 질문 4]")
-  List<String> questionOptionRequest;
+  List<String> questionOptionRequest = new ArrayList<>();
 
 }

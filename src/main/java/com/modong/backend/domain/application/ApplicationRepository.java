@@ -11,4 +11,7 @@ public interface ApplicationRepository extends JpaRepository<Application,Long> {
 
   Optional<Application> findByUrlId(String urlId);
   boolean existsByUrlId(String urlId);
+
+  Optional<Application> findByIdAndIsDeletedIsFalse(Long id);
+
 }

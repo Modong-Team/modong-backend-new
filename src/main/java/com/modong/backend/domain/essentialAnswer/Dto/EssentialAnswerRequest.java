@@ -3,10 +3,13 @@ package com.modong.backend.domain.essentialAnswer.Dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Schema(name = "필수 질문 요청")
+@NoArgsConstructor
 public class EssentialAnswerRequest {
 
 
@@ -19,4 +22,9 @@ public class EssentialAnswerRequest {
   @Schema(description = "필수 질문 답변",  example = "필수 질문 답변입니다!")
   private String answer;
 
+  @Builder
+  public EssentialAnswerRequest(Long essentialQuestionId, String answer) {
+    this.essentialQuestionId = essentialQuestionId;
+    this.answer = answer;
+  }
 }

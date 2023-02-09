@@ -1,6 +1,7 @@
 package com.modong.backend.domain.club.clubMemeber;
 
 import com.modong.backend.auth.member.Member;
+import com.modong.backend.base.BaseTimeEntity;
 import com.modong.backend.domain.club.Club;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ClubMember {
+public class ClubMember extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

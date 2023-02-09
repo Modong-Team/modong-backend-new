@@ -1,4 +1,4 @@
-package com.modong.backend.domain.Evaluation;
+package com.modong.backend.domain.evaluation;
 
 import com.modong.backend.domain.applicant.Applicant;
 import com.modong.backend.auth.member.Member;
@@ -27,9 +27,8 @@ public class Evaluation {
   private String comment;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Applicant applicant;
-
-  @ManyToOne(fetch = FetchType.LAZY)
   private Member member;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Applicant applicant;
 }

@@ -3,7 +3,7 @@ package com.modong.backend.unit.domain.application;
 import static com.modong.backend.Fixtures.ApplicationFixture.APPLICATION_ID;
 import static com.modong.backend.Fixtures.ApplicationFixture.URL_ID;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_ID;
-import static com.modong.backend.Fixtures.EssentialQuestionFixture.CONTENT;
+import static com.modong.backend.Fixtures.EssentialQuestionFixture.ESSENTIAL_QUESTION_CONTENT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -47,7 +47,7 @@ public class ApplicationServiceTest extends ServiceTest {
 
     updatedApplication = new Application(applicationCreateRequest,club);
 
-    essentialQuestion = new EssentialQuestion(CONTENT,true);
+    essentialQuestion = new EssentialQuestion(ESSENTIAL_QUESTION_CONTENT,true);
 
     ReflectionTestUtils.setField(application,"id",APPLICATION_ID);
   }
