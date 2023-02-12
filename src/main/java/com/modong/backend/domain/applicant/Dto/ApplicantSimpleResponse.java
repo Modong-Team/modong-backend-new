@@ -29,9 +29,14 @@ public class ApplicantSimpleResponse {
     this.ApplicationId = applicant.getApplication().getId();
     this.id = applicant.getId();
     this.name = applicant.getName();
-    this.rate = applicant.getRate();
+    this.rate = getRoundedRate(applicant.getRate()).floatValue();
     this.status = applicant.getApplicantStatus().toString();
     this.submitDate = asDate(applicant.getCreateDate());
     this.isFail = applicant.isFail();
   }
+
+  private Double getRoundedRate(Float rate){
+    return (Math.round(rate*10)/10.0) ;
+  }
+
 }

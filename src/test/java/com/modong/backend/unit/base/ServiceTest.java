@@ -14,7 +14,31 @@ import static com.modong.backend.Fixtures.ClubFixture.CLUB_NAME;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_PROFILE_IMG_URL;
 import static com.modong.backend.Fixtures.EssentialAnswerFixture.ESSENTIAL_ANSWER;
 import static com.modong.backend.Fixtures.EssentialQuestionFixture.ESSENTIAL_QUESTION_ID;
+import static com.modong.backend.Fixtures.EvaluationFixture.COMMENT;
+import static com.modong.backend.Fixtures.EvaluationFixture.COMMENT_A;
+import static com.modong.backend.Fixtures.EvaluationFixture.COMMENT_B;
+import static com.modong.backend.Fixtures.EvaluationFixture.COMMENT_C;
+import static com.modong.backend.Fixtures.EvaluationFixture.EVALUATION_A_ID;
+import static com.modong.backend.Fixtures.EvaluationFixture.EVALUATION_ID;
+import static com.modong.backend.Fixtures.EvaluationFixture.SCORE;
+import static com.modong.backend.Fixtures.EvaluationFixture.SCORE_A;
+import static com.modong.backend.Fixtures.EvaluationFixture.SCORE_B;
+import static com.modong.backend.Fixtures.EvaluationFixture.SCORE_C;
+import static com.modong.backend.Fixtures.EvaluationFixture.UPDATE_COMMENT;
+import static com.modong.backend.Fixtures.EvaluationFixture.UPDATE_COMMENT_A;
 import static com.modong.backend.Fixtures.MemberFixture.EMAIL;
+import static com.modong.backend.Fixtures.MemberFixture.MEMBER_A_EMAIL;
+import static com.modong.backend.Fixtures.MemberFixture.MEMBER_A_MEMBER_ID;
+import static com.modong.backend.Fixtures.MemberFixture.MEMBER_A_NAME;
+import static com.modong.backend.Fixtures.MemberFixture.MEMBER_A_PHONE;
+import static com.modong.backend.Fixtures.MemberFixture.MEMBER_B_EMAIL;
+import static com.modong.backend.Fixtures.MemberFixture.MEMBER_B_MEMBER_ID;
+import static com.modong.backend.Fixtures.MemberFixture.MEMBER_B_NAME;
+import static com.modong.backend.Fixtures.MemberFixture.MEMBER_B_PHONE;
+import static com.modong.backend.Fixtures.MemberFixture.MEMBER_C_EMAIL;
+import static com.modong.backend.Fixtures.MemberFixture.MEMBER_C_MEMBER_ID;
+import static com.modong.backend.Fixtures.MemberFixture.MEMBER_C_NAME;
+import static com.modong.backend.Fixtures.MemberFixture.MEMBER_C_PHONE;
 import static com.modong.backend.Fixtures.MemberFixture.MEMBER_ID;
 import static com.modong.backend.Fixtures.MemberFixture.NAME;
 import static com.modong.backend.Fixtures.MemberFixture.PASSWORD;
@@ -32,6 +56,7 @@ import com.modong.backend.auth.member.MemberRepository;
 import com.modong.backend.auth.refreshToken.RefreshTokenRepository;
 import com.modong.backend.domain.applicant.Dto.ApplicantCreateRequest;
 import com.modong.backend.domain.applicant.repository.ApplicantRepository;
+import com.modong.backend.domain.applicant.repository.ApplicantRepositoryCustomImpl;
 import com.modong.backend.domain.application.ApplicationRepository;
 import com.modong.backend.domain.application.Dto.ApplicationCreateRequest;
 import com.modong.backend.domain.application.Dto.ApplicationUpdateRequest;
@@ -42,6 +67,9 @@ import com.modong.backend.domain.essentialQuestion.EssentialQuestion;
 import com.modong.backend.domain.essentialQuestion.EssentialQuestionRepository;
 import com.modong.backend.domain.evaluation.EvaluationRepository;
 import com.modong.backend.domain.evaluation.dto.EvaluationCreateRequest;
+import com.modong.backend.domain.evaluation.dto.EvaluationDeleteRequest;
+import com.modong.backend.domain.evaluation.dto.EvaluationFindRequest;
+import com.modong.backend.domain.evaluation.dto.EvaluationUpdateRequest;
 import com.modong.backend.domain.memo.MemoRepository;
 import com.modong.backend.domain.memo.dto.MemoCreateRequest;
 import com.modong.backend.domain.memo.dto.MemoDeleteRequest;
@@ -84,6 +112,9 @@ public class ServiceTest {
   protected ApplicantRepository applicantRepository;
 
   @MockBean
+  protected ApplicantRepositoryCustomImpl applicantRepositoryCustom;
+
+  @MockBean
   protected MemoRepository memoRepository;
 
   @MockBean
@@ -97,7 +128,19 @@ public class ServiceTest {
   protected MemberRegisterRequest memberRegisterRequest = MemberRegisterRequest.builder()
       .memberId(MEMBER_ID).email(EMAIL).password(PASSWORD)
       .phone(PHONE).name(NAME).clubCode(CLUB_CODE).build();
-  
+
+  protected MemberRegisterRequest memberRegisterRequest_userA = MemberRegisterRequest.builder()
+      .memberId(MEMBER_A_MEMBER_ID).email(MEMBER_A_EMAIL).password(PASSWORD)
+      .phone(MEMBER_A_PHONE).name(MEMBER_A_NAME).clubCode(CLUB_CODE).build();
+
+  protected MemberRegisterRequest memberRegisterRequest_userB = MemberRegisterRequest.builder()
+      .memberId(MEMBER_B_MEMBER_ID).email(MEMBER_B_EMAIL).password(PASSWORD)
+      .phone(MEMBER_B_PHONE).name(MEMBER_B_NAME).clubCode(CLUB_CODE).build();
+
+  protected MemberRegisterRequest memberRegisterRequest_userC = MemberRegisterRequest.builder()
+      .memberId(MEMBER_C_MEMBER_ID).email(MEMBER_C_EMAIL).password(PASSWORD)
+      .phone(MEMBER_C_PHONE).name(MEMBER_C_NAME).clubCode(CLUB_CODE).build();
+
   protected ClubCreateRequest clubCreateRequest = ClubCreateRequest.builder()
       .name(CLUB_NAME).profileImgUrl(CLUB_PROFILE_IMG_URL).build();
   protected ApplicationCreateRequest applicationCreateRequest = ApplicationCreateRequest.builder()
@@ -136,6 +179,42 @@ public class ServiceTest {
       .build();
 
   protected EvaluationCreateRequest evaluationCreateRequest = EvaluationCreateRequest.builder()
+      .applicantId(APPLICANT_ID)
+      .applicationId(APPLICATION_ID)
+      .comment(COMMENT)
+      .score(SCORE)
+      .build();
+  protected EvaluationCreateRequest evaluationCreateRequest_userA = EvaluationCreateRequest.builder()
+      .applicantId(APPLICANT_ID)
+      .applicationId(APPLICATION_ID)
+      .comment(COMMENT_A)
+      .score(SCORE_A)
+      .build();
+  protected EvaluationCreateRequest evaluationCreateRequest_userB = EvaluationCreateRequest.builder()
+      .applicantId(APPLICANT_ID)
+      .applicationId(APPLICATION_ID)
+      .comment(COMMENT_B)
+      .score(SCORE_B)
+      .build();
+  protected EvaluationCreateRequest evaluationCreateRequest_userC = EvaluationCreateRequest.builder()
+      .applicantId(APPLICANT_ID)
+      .applicationId(APPLICATION_ID)
+      .comment(COMMENT_C)
+      .score(SCORE_C)
+      .build();
+
+  protected EvaluationUpdateRequest evaluationUpdateRequest = EvaluationUpdateRequest.builder()
+      .evaluationId(EVALUATION_ID)
+      .newComment(UPDATE_COMMENT)
+      .newScore(SCORE + 1.0f)
+      .build();
+  protected EvaluationDeleteRequest evaluationDeleteRequest = EvaluationDeleteRequest.builder()
+      .evaluationId(EVALUATION_ID)
+      .build();
+
+  protected EvaluationFindRequest evaluationFindRequest = EvaluationFindRequest.builder()
+      .applicantId(APPLICANT_ID)
+      .applicationId(APPLICATION_ID)
       .build();
 
 }
