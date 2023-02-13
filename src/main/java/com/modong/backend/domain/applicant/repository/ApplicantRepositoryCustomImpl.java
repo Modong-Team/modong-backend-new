@@ -1,23 +1,22 @@
 package com.modong.backend.domain.applicant.repository;
 
 import static com.modong.backend.domain.applicant.QApplicant.applicant;
+import static com.modong.backend.domain.evaluation.QEvaluation.evaluation;
 
 import com.modong.backend.Enum.ApplicantStatus;
 import com.modong.backend.domain.applicant.Applicant;
 import com.modong.backend.domain.applicant.Dto.SearchApplicantRequest;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -27,6 +26,26 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class ApplicantRepositoryCustomImpl implements ApplicantRepositoryCustom{
   private final JPAQueryFactory queryFactory;
+
+  @Override
+  public void updateRateByApplicantId(Long applicantId) {
+    queryFactory.update(applicant)
+        .set(applicant.rate,getRateByApplicantId(applicantId))
+        .where(eqApplicantId(applicantId)).execute();
+  }
+
+  @Override
+  public Float getRateByApplicantId(Long applicantId) {
+    Double result = queryFactory
+        .select(evaluation.score.avg())
+        .from(evaluation)
+        .where(
+            eqEvaluationApplicantId(applicantId),
+            eqEvaluationNotDeleted()
+        )
+        .fetchOne();
+    return result.floatValue();
+  }
 
   @Override
   public Page<Applicant> searchByApplicationIdAndStatus(Long applicationId, SearchApplicantRequest request,
@@ -39,7 +58,7 @@ public class ApplicantRepositoryCustomImpl implements ApplicantRepositoryCustom{
         .selectFrom(applicant)
         .where(
             filtering(filter),
-            eqId(applicationId),
+            eqApplicationId(applicationId),
             eqStatus(status),
             eqNotDeleted()
         )
@@ -52,12 +71,13 @@ public class ApplicantRepositoryCustomImpl implements ApplicantRepositoryCustom{
         .selectFrom(applicant)
         .where(
             filtering(filter),
-            eqId(applicationId),
+            eqApplicationId(applicationId),
             eqStatus(status),
             eqNotDeleted()
         );
     return PageableExecutionUtils.getPage(fetch,pageable,()-> count.fetchCount());
   }
+
 
   private BooleanExpression filtering(String filter) {
     switch (filter){
@@ -77,8 +97,11 @@ public class ApplicantRepositoryCustomImpl implements ApplicantRepositoryCustom{
     return applicant.isFail.eq(isFail);
   }
 
-  private BooleanExpression eqId(Long id) {
-    return applicant.application.id.eq(id);
+  private BooleanExpression eqApplicantId(Long applicantId) {
+    return applicant.id.eq(applicantId);
+  }
+  private BooleanExpression eqApplicationId(Long applicationId) {
+    return applicant.application.id.eq(applicationId);
   }
 
   private BooleanExpression eqStatus(int status) {
@@ -87,6 +110,12 @@ public class ApplicantRepositoryCustomImpl implements ApplicantRepositoryCustom{
   }
   private BooleanExpression eqNotDeleted() {
     return applicant.isDeleted.isFalse();
+  }
+  private BooleanExpression eqEvaluationApplicantId(Long applicantId) {
+    return evaluation.applicant.id.eq(applicantId);
+  }
+  private BooleanExpression eqEvaluationNotDeleted() {
+    return evaluation.isDeleted.isFalse();
   }
 
   private OrderSpecifier[] makeSort(Sort sort) {
