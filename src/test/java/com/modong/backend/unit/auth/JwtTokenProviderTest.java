@@ -1,6 +1,7 @@
 package com.modong.backend.unit.auth;
 
 import com.modong.backend.auth.JwtTokenProvider;
+import com.modong.backend.global.exception.auth.TokenNotValidException;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -55,12 +57,14 @@ public class JwtTokenProviderTest {
   @DisplayName("토큰의 유효시간이 지났다면 검증함수에서 false 를 반환해야한다.")
   @Test
   public void returnFalseIfTokenIsNotValid(){
-    //given
+    //given,when
     expiredToken = tokenProvider.createToken(id,0);
+    TokenNotValidException actual = new TokenNotValidException("만료된 JWT 토큰입니다.");
+
     //when
-    boolean actual = tokenProvider.validateToken(expiredToken);
+    Throwable exception = assertThrows(TokenNotValidException.class, () -> tokenProvider.validateToken(expiredToken));
     //then
-    assertEquals(false, actual);
+    assertEquals(actual.getClientMessage(),exception.getMessage());
   }
 
   @DisplayName("서버의 Secret-Key 와 다른 값으로 만든 토큰을 요청으로 받으면 검증함수에서 false 를 반환해야 한다.")
@@ -70,10 +74,11 @@ public class JwtTokenProviderTest {
     final String fakeKey = faker.random().hex(128);
     final JwtTokenProvider fakeProvider = new JwtTokenProvider(fakeKey,1000,1000);
     final String fakeToken = fakeProvider.createAccessToken(id);
+    TokenNotValidException actual = new TokenNotValidException("잘못된 JWT 서명입니다.");
     //when
-    boolean actual = tokenProvider.validateToken(fakeToken);
+    Throwable exception = assertThrows(TokenNotValidException.class, () -> tokenProvider.validateToken(fakeToken));
     //then
-    assertEquals(false,actual);
+    assertEquals(actual.getClientMessage(),exception.getMessage());
   }
 
 

@@ -8,8 +8,8 @@ import com.modong.backend.auth.Dto.TokenResponse;
 import com.modong.backend.auth.member.Member;
 import com.modong.backend.auth.refreshToken.RefreshToken;
 import com.modong.backend.global.exception.auth.PasswordMismatchException;
-import com.modong.backend.global.exception.auth.RefreshTokenNotFoundException;
-import com.modong.backend.global.exception.auth.RefreshTokenNotValidException;
+import com.modong.backend.global.exception.auth.TokenNotFoundException;
+import com.modong.backend.global.exception.auth.TokenNotValidException;
 import com.modong.backend.global.exception.member.MemberNotFoundException;
 import com.modong.backend.unit.base.ServiceTest;
 import java.util.Optional;
@@ -150,7 +150,7 @@ public class AuthServiceTest extends ServiceTest {
     assertThatThrownBy(() -> authService.createAccessToken(tokenRequest))
         .isInstanceOf(MemberNotFoundException.class);
   }
-  @DisplayName("토큰 재발급 실패 - RefreshToken 이 유효하지 않으면 RefreshTokenNotValidException 이 발생한다. ")
+  @DisplayName("토큰 재발급 실패 - RefreshToken 이 유효하지 않으면 TokenNotValidException 이 발생한다. ")
   @Test
   public void throwExceptionIfRefreshTokenIsNotValid(){
     //given, when
@@ -165,9 +165,9 @@ public class AuthServiceTest extends ServiceTest {
 
     //then
     assertThatThrownBy(() -> authService.createAccessToken(tokenRequest))
-        .isInstanceOf(RefreshTokenNotValidException.class);
+        .isInstanceOf(TokenNotValidException.class);
   }
-  @DisplayName("토큰 재발급 실패 - RefreshToken 이 DB에 저장된 토큰과 같지 않으면 RefreshTokenNotValidException 이 발생한다. ")
+  @DisplayName("토큰 재발급 실패 - RefreshToken 이 DB에 저장된 토큰과 같지 않으면 TokenNotValidException 이 발생한다. ")
   @Test
   public void throwExceptionIfRefreshTokenIsNotMatch(){
     //given, when
@@ -184,9 +184,9 @@ public class AuthServiceTest extends ServiceTest {
 
     //then
     assertThatThrownBy(() -> authService.createAccessToken(tokenRequest))
-        .isInstanceOf(RefreshTokenNotValidException.class);
+        .isInstanceOf(TokenNotValidException.class);
   }
-  @DisplayName("토큰 재발급 실패 - RefreshToken 이 DB에 존재하지 않으면 RefreshTokenNotFoundException 이 발생한다. ")
+  @DisplayName("토큰 재발급 실패 - RefreshToken 이 DB에 존재하지 않으면 TokenNotFoundException 이 발생한다. ")
   @Test
   public void throwExceptionIfRefreshTokenIsNotFound(){
     //given,when
@@ -203,7 +203,7 @@ public class AuthServiceTest extends ServiceTest {
 
     //then
     assertThatThrownBy(() -> authService.createAccessToken(tokenRequest))
-        .isInstanceOf(RefreshTokenNotFoundException.class);
+        .isInstanceOf(TokenNotFoundException.class);
   }
 
 }

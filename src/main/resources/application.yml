@@ -17,3 +17,7 @@ jwt:
 
 allow-cors:
   list: http://localhost
+
+swagger:
+  api-server-url: http://localhost:8080
+  description: 로컬 테스트용 서버

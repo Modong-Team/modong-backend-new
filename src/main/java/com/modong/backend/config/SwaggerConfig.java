@@ -34,6 +34,8 @@ import org.springframework.util.StringUtils;
 @Configuration
 public class SwaggerConfig {
 
+
+
   @Bean
   public GroupedOpenApi publicApi(){
     return GroupedOpenApi.builder()
@@ -43,7 +45,7 @@ public class SwaggerConfig {
         .build();
   }
   @Bean
-  public OpenAPI customOpenAPI(@Value("${springdoc.version}") String appVersion) {
+  public OpenAPI customOpenAPI(@Value("${springdoc.version}") String appVersion, @Value("${swagger.api-server-url}") String apiServerUrl, @Value("${swagger.description}") String description) {
 
     SecurityScheme securityScheme = new SecurityScheme().type(Type.HTTP)
         .scheme("bearer").bearerFormat("JWT").in(In.HEADER).name("Authorization");
@@ -56,8 +58,7 @@ public class SwaggerConfig {
     Info info = new Info().title("Modong API Docs")
         .description("모두의 동아리 서비스에서 사용하는 API를 정리한 문서").version(appVersion);
 
-    List<Server> servers = Arrays.asList(makeServer("https://api.linko.site", "Linko API 서버")
-        ,makeServer("http://localhost:8080" ,"Local 테스트 용"));
+    List<Server> servers = Arrays.asList(makeServer(apiServerUrl, description));
 
     return new OpenAPI()
         .components(components)

@@ -47,6 +47,7 @@ swagger:
   api-server-url: ${API_SERVER_URL}
   description: ${API_SERVER_DESCRIPTION}
 
+
 management:
   endpoint:
     metrics:

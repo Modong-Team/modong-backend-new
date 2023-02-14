@@ -3,15 +3,8 @@ package com.modong.backend.global.handler;
 import com.modong.backend.base.Dto.ErrorResponse;
 import com.modong.backend.global.exception.BadRequestException;
 import com.modong.backend.global.exception.NotFoundException;
-import com.modong.backend.global.exception.ResourceNotFoundException;
-import com.modong.backend.global.exception.application.UrlIdDuplicateException;
-import com.modong.backend.global.exception.auth.ExtractTokenFailException;
 import com.modong.backend.global.exception.auth.NoPermissionException;
-import com.modong.backend.global.exception.auth.RefreshTokenNotValidException;
 import com.modong.backend.global.exception.auth.UnAuthorizedException;
-import com.modong.backend.global.exception.member.DuplicateEmailException;
-import com.modong.backend.global.exception.member.DuplicateMemberIdException;
-import com.modong.backend.global.exception.member.DuplicatePhoneException;
 import java.security.InvalidParameterException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,6 +21,7 @@ public class GlobalExceptionHandler {
 
   private static final String ERROR_LOGGING_MESSAGE = "예외 발생: ";
 
+  @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
   protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
     log.error(ERROR_LOGGING_MESSAGE, e);
@@ -39,6 +33,7 @@ public class GlobalExceptionHandler {
   }
 
   //@Validated 검증 실패 시 Catch
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(InvalidParameterException.class)
   protected ResponseEntity<ErrorResponse> handleInvalidParameterException(InvalidParameterException e) {
     log.error(ERROR_LOGGING_MESSAGE, e);
@@ -92,7 +87,7 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
   }
 
-
+  @ResponseStatus(HttpStatus.FORBIDDEN)
   @ExceptionHandler({
       NoPermissionException.class
   })

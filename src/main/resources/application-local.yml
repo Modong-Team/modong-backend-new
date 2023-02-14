@@ -29,7 +29,6 @@ springdoc:
     disable-swagger-default-url: true
   show-actuator: true
 
-
 logging.level:
   org.hibernate.SQL: debug
   # org.hibernate.type: trace
@@ -38,9 +37,13 @@ jwt:
   token:
     secret-key: MySubProject Modong`s jwt secret-key
     access:
-      expire-time: 86400
+      expire-time: 100
     refresh:
       expire-time: 604800
 
 allow-cors:
   list: http://localhost
+
+swagger:
+  api-server-url: http://localhost:8080
+  description: 로컬 테스트용 서버

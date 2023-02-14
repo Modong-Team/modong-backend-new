@@ -21,7 +21,7 @@ import com.modong.backend.auth.Dto.TokenRequest;
 import com.modong.backend.auth.Dto.TokenResponse;
 import com.modong.backend.global.exception.WrongFormatException;
 import com.modong.backend.global.exception.auth.PasswordMismatchException;
-import com.modong.backend.global.exception.auth.RefreshTokenNotValidException;
+import com.modong.backend.global.exception.auth.TokenNotValidException;
 import com.modong.backend.global.exception.member.MemberNotFoundException;
 import com.modong.backend.unit.base.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
@@ -192,7 +192,7 @@ public class AuthControllerTest extends ControllerTest {
 
     requestBody = objectMapper.writeValueAsString(tokenRequest);
 
-    RefreshTokenNotValidException expected = new RefreshTokenNotValidException();
+    TokenNotValidException expected = new TokenNotValidException();
 
     given(authService.createAccessToken(any()))
         .willThrow(expected);

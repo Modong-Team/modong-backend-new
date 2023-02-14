@@ -8,8 +8,8 @@ import com.modong.backend.auth.member.MemberRepository;
 import com.modong.backend.auth.refreshToken.RefreshToken;
 import com.modong.backend.auth.refreshToken.RefreshTokenRepository;
 import com.modong.backend.global.exception.auth.PasswordMismatchException;
-import com.modong.backend.global.exception.auth.RefreshTokenNotFoundException;
-import com.modong.backend.global.exception.auth.RefreshTokenNotValidException;
+import com.modong.backend.global.exception.auth.TokenNotFoundException;
+import com.modong.backend.global.exception.auth.TokenNotValidException;
 import com.modong.backend.global.exception.member.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,7 +49,7 @@ public class AuthService {
 
     // refreshToken 유효성 검사
     if(!jwtTokenProvider.validateToken(tokenRequest.getRefreshToken())){
-      throw new RefreshTokenNotValidException();
+      throw new TokenNotValidException();
     }
     // 토큰 정보 추출
     Long memberId;
@@ -57,7 +57,7 @@ public class AuthService {
        memberId = Long.parseLong(jwtTokenProvider.getPayload(tokenRequest.getRefreshToken()));
     }
     catch (Exception e){ // Long으로 바꾸는데 에러가 발생한다면 Exception을 던짐.
-      throw new RefreshTokenNotValidException();
+      throw new TokenNotValidException();
     }
 
     //멤버 존재하는지 확인
@@ -66,11 +66,11 @@ public class AuthService {
 
     // memberId로 DB에 존재하는 토큰 찾은 후 요청으로 들어온 토큰과 같은지 비교
     RefreshToken findToken = refreshTokenRepository.findByMemberId(memberId)
-        .orElseThrow(() ->  new RefreshTokenNotFoundException(memberId));
+        .orElseThrow(() ->  new TokenNotFoundException(memberId));
 
     // 요청으로 받은 토큰과 DB에 존재하는 토큰 같은지 검사
     if(!tokenRequest.getRefreshToken().equals(findToken.getRefreshToken())){
-      throw new RefreshTokenNotValidException();
+      throw new TokenNotValidException();
     }
 
     findToken.update(issueRefreshToken(findMember));
