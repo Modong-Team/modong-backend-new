@@ -6,6 +6,7 @@ import com.modong.backend.global.exception.NotFoundException;
 import com.modong.backend.global.exception.auth.NoPermissionException;
 import com.modong.backend.global.exception.auth.UnAuthorizedException;
 import java.security.InvalidParameterException;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +20,12 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @Slf4j
 public class GlobalExceptionHandler {
 
-  private static final String ERROR_LOGGING_MESSAGE = "예외 발생: ";
+  private static final String ERROR_LOGGING_MESSAGE = "예외 발생, 요청 url: %s";
 
   @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-  protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
-    log.error(ERROR_LOGGING_MESSAGE, e);
+  protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
+    log.error(String.format(ERROR_LOGGING_MESSAGE, request.getRequestURI()) + String.format(", 요청 메소드: %s", request.getMethod()), e);
     final ErrorResponse response = ErrorResponse.builder()
         .status(HttpStatus.METHOD_NOT_ALLOWED.value())
         .message(e.getMessage()).build();
@@ -105,7 +106,7 @@ public class GlobalExceptionHandler {
 
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @ExceptionHandler
-  public void handleRuntimeException(final RuntimeException e) {
-    log.error("예상하지 못한 에러가 발생하였습니다.", e);
+  public void handleRuntimeException(final RuntimeException e, HttpServletRequest request) {
+    log.error(String.format("예상하지 못한 에러가 발생하였습니다. 요청 url : %s", request.getRequestURI()) + String.format(", 요청 메소드: %s", request.getMethod()), e);
   }
 }

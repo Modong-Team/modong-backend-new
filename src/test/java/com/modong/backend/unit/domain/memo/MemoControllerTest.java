@@ -33,6 +33,7 @@ public class MemoControllerTest extends ControllerTest {
   public void init(){
 
   }
+  //지금 Auth에서 인증정보 처리를 어떻게 테스트 하는지 몰라서 일단 보류 ㅇㅇ
   @DisplayName("메모 생성 성공")
   @WithMockUser
   @Test

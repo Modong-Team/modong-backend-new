@@ -1,7 +1,9 @@
 package com.modong.backend.integration;
 
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_END_DATE;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_NAME;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_PROFILE_IMG_URL;
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_START_DATE;
 import static com.modong.backend.Fixtures.MemberFixture.EMAIL;
 import static com.modong.backend.Fixtures.MemberFixture.MEMBER_ID;
 import static com.modong.backend.Fixtures.MemberFixture.NAME;
@@ -47,7 +49,7 @@ public class IntegrationTest {
 
 
   public ClubCreateResponse clubSetUp(){
-    final ClubCreateRequest clubCreateRequest = new ClubCreateRequest(CLUB_NAME,CLUB_PROFILE_IMG_URL);
+    final ClubCreateRequest clubCreateRequest = new ClubCreateRequest(CLUB_NAME,CLUB_PROFILE_IMG_URL,CLUB_START_DATE,CLUB_END_DATE);
     return clubService.save(clubCreateRequest);
   }
 

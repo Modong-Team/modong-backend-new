@@ -1,6 +1,7 @@
 package com.modong.backend.domain.club;
 
 import com.modong.backend.Enum.CustomCode;
+import com.modong.backend.auth.support.Auth;
 import com.modong.backend.base.Dto.BaseResponse;
 import com.modong.backend.base.Dto.ErrorResponse;
 import com.modong.backend.base.Dto.ExistsResponse;
@@ -63,5 +64,12 @@ public class ClubController {
     ExistsResponse existsResponse = new ExistsResponse(clubService.checkClubCode(clubCheckRequest));
     return ResponseEntity.ok(new BaseResponse(existsResponse, HttpStatus.OK.value(), CustomCode.SUCCESS_EXISTS_CHECK));
   }
-
+  @GetMapping("/club/member")
+  @Operation(summary = "동아리 조회 - memberId 이용", description = "회원의 Id를 이용해 동아리를 조회한다.", responses = {
+      @ApiResponse(responseCode = "200", description = "동아리 조회 성공", content = @Content(schema = @Schema(implementation = ClubResponse.class)))
+  })
+  public ResponseEntity getClubByMemberId(@Auth Long memberId){
+    ClubResponse club = clubService.findByMemberId(memberId);
+    return ResponseEntity.ok(new BaseResponse(club,HttpStatus.OK.value(), CustomCode.SUCCESS_GET));
+  }
 }

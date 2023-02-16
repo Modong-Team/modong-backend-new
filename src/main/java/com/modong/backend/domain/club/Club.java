@@ -28,17 +28,25 @@ public class Club extends BaseTimeEntity {
   private String profileImgUrl;
 
   private String clubCode = UUIDGenerateUtils.makeShortUUID(); // 10자리 유니크 아이디 부여
+
+  private String startDate;
+
+  private String endDate;
   @OneToMany(mappedBy = "club")
   private List<ClubMember> members = new ArrayList<>();
   public Club(ClubCreateRequest clubCreateRequest) {
     this.name = clubCreateRequest.getName();
     this.profileImgUrl = clubCreateRequest.getProfileImgUrl();
+    this.startDate = clubCreateRequest.getStartDate();
+    this.endDate = clubCreateRequest.getEndDate();
   }
 
   public Club(Long id, ClubCreateRequest clubCreateRequest) {
     this.id = id;
     this.name = clubCreateRequest.getName();
     this.profileImgUrl = clubCreateRequest.getProfileImgUrl();
+    this.startDate = clubCreateRequest.getStartDate();
+    this.endDate = clubCreateRequest.getEndDate();
   }
   public void addMember(ClubMember clubMember){
     this.members.add(clubMember);

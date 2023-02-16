@@ -32,13 +32,17 @@ public class MemberService {
     Club club = clubRepository.findByClubCode(memberRegisterRequest.getClubCode())
         .orElseThrow(() -> new ClubNotFoundException(memberRegisterRequest.getClubCode()));
 
-    //휴대폰 번호 중복 검사
-    if(isDuplicatePhone(memberRegisterRequest.getPhone())){
-      throw new DuplicatePhoneException();
-    }
-    //이메일 중복 검사
-    if(isDuplicateEmail(memberRegisterRequest.getEmail())){
-      throw new DuplicateEmailException();
+//    //휴대폰 번호 중복 검사
+//    if(isDuplicatePhone(memberRegisterRequest.getPhone())){
+//      throw new DuplicatePhoneException();
+//    }
+//    //이메일 중복 검사
+//    if(isDuplicateEmail(memberRegisterRequest.getEmail())){
+//      throw new DuplicateEmailException();
+//    }
+    // 회원 아이디 중복 검사
+    if(isDuplicateMemberId(memberRegisterRequest.getMemberId())){
+      throw new DuplicateMemberIdException();
     }
 
     Member member = new Member(memberRegisterRequest);
@@ -49,13 +53,8 @@ public class MemberService {
 
     member.addClub(clubMember);
 
-
-    try{
-      Member savedMember = memberRepository.save(member);
-      return savedMember.getId();
-    } catch (Exception e){
-      throw new DuplicateMemberIdException();
-    }
+    Member savedMember = memberRepository.save(member);
+    return savedMember.getId();
   }
 
   public MemberResponse findById(Long findMemberId) {

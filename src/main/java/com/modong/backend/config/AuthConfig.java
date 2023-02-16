@@ -27,6 +27,7 @@ public class AuthConfig implements WebMvcConfigurer {
         .addPathPatterns("/api/v1/member/**")
         .addPathPatterns("/api/v1/memo/**")
         .addPathPatterns("/api/v1/memos/**")
+        .addPathPatterns("/api/v1/club/member")
         .excludePathPatterns("/api/v1/member/check");
   }
 

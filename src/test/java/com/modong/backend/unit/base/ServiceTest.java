@@ -9,9 +9,11 @@ import static com.modong.backend.Fixtures.ApplicationFixture.UPDATE_E_QUESTION_I
 import static com.modong.backend.Fixtures.ApplicationFixture.UPDATE_TITLE;
 import static com.modong.backend.Fixtures.ApplicationFixture.URL_ID;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_CODE;
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_END_DATE;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_ID;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_NAME;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_PROFILE_IMG_URL;
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_START_DATE;
 import static com.modong.backend.Fixtures.EssentialAnswerFixture.ESSENTIAL_ANSWER;
 import static com.modong.backend.Fixtures.EssentialQuestionFixture.ESSENTIAL_QUESTION_ID;
 import static com.modong.backend.Fixtures.EvaluationFixture.COMMENT;
@@ -142,7 +144,8 @@ public class ServiceTest {
       .phone(MEMBER_C_PHONE).name(MEMBER_C_NAME).clubCode(CLUB_CODE).build();
 
   protected ClubCreateRequest clubCreateRequest = ClubCreateRequest.builder()
-      .name(CLUB_NAME).profileImgUrl(CLUB_PROFILE_IMG_URL).build();
+      .name(CLUB_NAME).profileImgUrl(CLUB_PROFILE_IMG_URL)
+      .startDate(CLUB_START_DATE).endDate(CLUB_END_DATE).build();
   protected ApplicationCreateRequest applicationCreateRequest = ApplicationCreateRequest.builder()
       .title(TITLE).clubId(CLUB_ID).essentialQuestionIds(E_QUESTION_ID_LIST).urlId(URL_ID).build();
   protected ApplicationUpdateRequest applicationUpdateRequest = ApplicationUpdateRequest.builder()

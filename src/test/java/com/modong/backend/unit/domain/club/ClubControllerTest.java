@@ -1,9 +1,11 @@
 package com.modong.backend.unit.domain.club;
 
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_CODE;
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_END_DATE;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_ID;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_NAME;
 import static com.modong.backend.Fixtures.ClubFixture.CLUB_PROFILE_IMG_URL;
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_START_DATE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -41,7 +43,7 @@ public class ClubControllerTest extends ControllerTest {
   public void returnSavedIdWithStatusCREATEDIfClubRequestValid() throws Exception {
     // given
 
-    clubCreateRequest = new ClubCreateRequest(CLUB_NAME,CLUB_PROFILE_IMG_URL);
+    final ClubCreateRequest clubCreateRequest = new ClubCreateRequest(CLUB_NAME,CLUB_PROFILE_IMG_URL,CLUB_START_DATE,CLUB_END_DATE);
     final Club club = new Club(clubCreateRequest);
     ReflectionTestUtils.setField(club,"id",CLUB_ID);
 
@@ -69,7 +71,7 @@ public class ClubControllerTest extends ControllerTest {
   @Test
   public void returnClubIfIdIsValid() throws Exception {
     // given
-    clubCreateRequest = new ClubCreateRequest(CLUB_NAME,CLUB_PROFILE_IMG_URL);
+    final ClubCreateRequest clubCreateRequest = new ClubCreateRequest(CLUB_NAME,CLUB_PROFILE_IMG_URL,CLUB_START_DATE,CLUB_END_DATE);
     ClubResponse clubResponse = new ClubResponse(new Club(clubCreateRequest));
 
     given(clubService.findById(any()))

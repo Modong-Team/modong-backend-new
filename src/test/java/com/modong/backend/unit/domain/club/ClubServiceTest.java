@@ -1,5 +1,7 @@
 package com.modong.backend.unit.domain.club;
 
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_END_DATE;
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_START_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -73,7 +75,8 @@ public class ClubServiceTest extends ServiceTest {
   public void passSaveClub(){
     //given
     ClubCreateRequest clubCreateRequest = ClubCreateRequest.builder().name("모동")
-        .profileImgUrl("https://avatars.githubusercontent.com/u/38587274?v=4").build();
+        .profileImgUrl("https://avatars.githubusercontent.com/u/38587274?v=4")
+        .startDate(CLUB_START_DATE).endDate(CLUB_END_DATE).build();
     Club club = new Club(clubCreateRequest);
 
     Long fakeClubId = 1L;
@@ -99,7 +102,8 @@ public class ClubServiceTest extends ServiceTest {
     //given
 
     ClubCreateRequest clubCreateRequest = ClubCreateRequest.builder().name("모동")
-        .profileImgUrl("https://avatars.githubusercontent.com/u/38587274?v=4").build();
+        .profileImgUrl("https://avatars.githubusercontent.com/u/38587274?v=4")
+        .startDate(CLUB_START_DATE).endDate(CLUB_END_DATE).build();
     Club club = new Club(clubCreateRequest);
 
     Long findId = 1L;
