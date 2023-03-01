@@ -28,21 +28,31 @@ springdoc:
     operationsSorter: method
     disable-swagger-default-url: true
   show-actuator: true
+logging:
+#  file:
+#    path: logs
+  pattern:
+    console: "%-5level %d{yyyy-MM-dd HH:mm:ss}[%thread] %logger[%method:%line] - %msg%n"
 
-logging.level:
-  org.hibernate.SQL: debug
-  # org.hibernate.type: trace
-
+  level:
+    org.springframework: INFO
+    org.hibernate.SQL: INFO
+    com.modong.backend: INFO
+#  # org.hibernate.type: trace
+#  logback:
+#    rollingpolicy:
+#      file-name-pattern:
+#        logs/%d{yyyy-MM-dd}/Log-%d{yyyy-MM-dd}.%i.log
 jwt:
   token:
     secret-key: MySubProject Modong`s jwt secret-key
     access:
-      expire-time: 100
+      expire-time: 36000
     refresh:
       expire-time: 604800
 
 allow-cors:
-  list: http://localhost
+  list: http://localhost:3001,http://localhost:3000
 
 swagger:
   api-server-url: http://localhost:8080

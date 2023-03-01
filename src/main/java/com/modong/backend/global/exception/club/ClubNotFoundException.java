@@ -1,8 +1,8 @@
 package com.modong.backend.global.exception.club;
 
-import com.modong.backend.global.exception.NotFoundException;
+import com.modong.backend.global.exception.BadRequestException;
 
-public class ClubNotFoundException extends NotFoundException {
+public class ClubNotFoundException extends BadRequestException {
 
   private static final String ERROR_CODE = "CLUB_NOT_FOUND";
   private static final String SERVER_MESSAGE = "존재하지 않는 동아리 조회";

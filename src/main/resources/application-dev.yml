@@ -12,8 +12,20 @@ spring:
         show_sql: false
         format_sql: false
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-logging.level:
-  org.hibernate.SQL: debug
+logging:
+  pattern:
+    path:
+    console: "%-5level %d{yyyy-MM-dd HH:mm:ss}[%thread] %logger[%method:%line] - %msg%n"
+  level:
+    org.springframework: INFO
+    com.modong.backend: INFO
+    org.hibernate.SQL: DEBUG
+  file:
+    path: ${LOG_PATH}
+  logback:
+    rollingpolicy:
+      file-name-pattern:
+        ${LOG_PATH}/%d{yyyy-MM-dd}/Log-%d{yyyy-MM-dd}.%i.log
   # org.hibernate.type: trace
 
 server:

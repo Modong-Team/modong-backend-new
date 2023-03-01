@@ -1,8 +1,8 @@
 package com.modong.backend.global.exception.applicant;
 
-import com.modong.backend.global.exception.NotFoundException;
+import com.modong.backend.global.exception.BadRequestException;
 
-public class ApplicantNotFoundException extends NotFoundException {
+public class ApplicantNotFoundException extends BadRequestException {
 
   private static final String ERROR_CODE = "APPLICANT_NOT_FOUND";
   private static final String SERVER_MESSAGE = "존재하지 않는 지원자 조회";

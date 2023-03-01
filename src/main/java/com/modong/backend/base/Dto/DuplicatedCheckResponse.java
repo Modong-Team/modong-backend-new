@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 @Schema(name = "중복 검사 응답")
-public class CheckResponse {
+public class DuplicatedCheckResponse {
   @Schema(description = "중복 검사 결과")
   private boolean duplicated;
 
-  public CheckResponse(boolean result) {
+  public DuplicatedCheckResponse(boolean result) {
     this.duplicated = result;
   }
 }

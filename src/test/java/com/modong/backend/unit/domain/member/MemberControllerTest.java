@@ -127,7 +127,7 @@ public class MemberControllerTest extends ControllerTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestBody));
     //then
-    perform.andExpect(status().isNotFound());
+    perform.andExpect(status().isBadRequest());
   }
 
   @DisplayName("회원가입 실패 - 회원가입 요청에 담긴 데이터가 유효 않으면 상태값 400를 반환해야 한다.")

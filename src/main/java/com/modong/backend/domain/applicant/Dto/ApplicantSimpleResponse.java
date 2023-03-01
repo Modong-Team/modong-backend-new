@@ -25,6 +25,9 @@ public class ApplicantSimpleResponse {
   @Schema(description = "탈락 여부",  example = "true/false")
   private boolean isFail;
 
+  @Schema(description = "평가자 수",  example = "1")
+  private Long numOfEvaluator;
+
   public ApplicantSimpleResponse(Applicant applicant) {
     this.ApplicationId = applicant.getApplication().getId();
     this.id = applicant.getId();
@@ -33,6 +36,7 @@ public class ApplicantSimpleResponse {
     this.status = applicant.getApplicantStatus().toString();
     this.submitDate = asDate(applicant.getCreateDate());
     this.isFail = applicant.isFail();
+    this.numOfEvaluator = applicant.getCountOfEvaluator();
   }
 
   private Double getRoundedRate(Float rate){

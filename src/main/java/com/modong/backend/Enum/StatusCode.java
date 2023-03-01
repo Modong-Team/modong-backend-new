@@ -1,7 +1,7 @@
 package com.modong.backend.Enum;
 
 public enum StatusCode {
-  OPEN(false), CLOSE(true);
+  BEFORE_OPENING(false),OPEN(false), CLOSE(true);
 
   boolean closed;
 

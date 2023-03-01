@@ -34,12 +34,16 @@ public class Evaluation extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Applicant applicant;
 
-  public Evaluation(EvaluationCreateRequest evaluationCreateRequest, Member member, Applicant applicant) {
+  //권한 확인용
+  private Long clubId;
+
+  public Evaluation(EvaluationCreateRequest evaluationCreateRequest, Member member, Applicant applicant, Long clubId) {
     this.creatorId = member.getId();
     this.score = evaluationCreateRequest.getScore();
     this.comment = evaluationCreateRequest.getComment();
     this.member = member;
     this.applicant = applicant;
+    this.clubId = clubId;
   }
 
   public boolean isWriter(Member member){

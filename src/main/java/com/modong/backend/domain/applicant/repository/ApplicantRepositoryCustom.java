@@ -10,5 +10,7 @@ public interface ApplicantRepositoryCustom {
   void updateRateByApplicantId(Long applicantId);
 
   Float getRateByApplicantId(Long applicantId);
+
+  Long getNumOfEvaluatorByApplicantId(Long applicantId);
   Page<Applicant> searchByApplicationIdAndStatus(Long applicationId, SearchApplicantRequest request, Pageable pageable);
 }

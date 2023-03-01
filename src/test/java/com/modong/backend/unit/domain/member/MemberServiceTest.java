@@ -1,10 +1,6 @@
 package com.modong.backend.unit.domain.member;
 
-import static com.modong.backend.Fixtures.ClubFixture.CLUB_CODE;
-import static com.modong.backend.Fixtures.ClubFixture.CLUB_END_DATE;
-import static com.modong.backend.Fixtures.ClubFixture.CLUB_NAME;
-import static com.modong.backend.Fixtures.ClubFixture.CLUB_PROFILE_IMG_URL;
-import static com.modong.backend.Fixtures.ClubFixture.CLUB_START_DATE;
+import static com.modong.backend.Fixtures.ClubFixture.*;
 import static com.modong.backend.Fixtures.MemberFixture.EMAIL;
 import static com.modong.backend.Fixtures.MemberFixture.MEMBER_ID;
 import static com.modong.backend.Fixtures.MemberFixture.NAME;
@@ -94,7 +90,7 @@ public class MemberServiceTest extends ServiceTest {
 
     Club club = new Club(clubCreateRequest);
 
-    Member member = new Member(memberRegisterRequest);
+    Member member = new Member(memberRegisterRequest,  CLUB_ID);
     member.setEncodedPassword(passwordEncoder.encode(memberRegisterRequest.getPassword()));
 
     Long fakeMemberId = 1L;

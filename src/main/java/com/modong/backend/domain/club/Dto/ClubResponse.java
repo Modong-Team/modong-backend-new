@@ -15,13 +15,12 @@ public class ClubResponse {
   private String profileImgUrl;
   @Schema(description = "동아리 코드", example = "KaOdf134Rd")
   private String clubCode;
-  @NotBlank
   @Schema(description = "동아리 모집 시작 날짜", example = "2023-03-01")
   private String startDate;
-  @NotBlank
   @Schema(description = "동아리 모집 마감 날짜", example = "2023-03-31")
   private String endDate;
-
+  @Schema(description = "동아리 총 인원 수", example = "5")
+  private Long numOfMember;
   public ClubResponse(Club club) {
     this.id = club.getId();
     this.name = club.getName();
@@ -29,5 +28,6 @@ public class ClubResponse {
     this.clubCode = club.getClubCode();
     this.startDate = club.getStartDate();
     this.endDate = club.getEndDate();
+    this.numOfMember = club.getCountOfMember();
   }
 }

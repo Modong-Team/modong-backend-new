@@ -6,7 +6,7 @@ import static com.modong.backend.domain.evaluation.QEvaluation.evaluation;
 import com.modong.backend.Enum.ApplicantStatus;
 import com.modong.backend.domain.applicant.Applicant;
 import com.modong.backend.domain.applicant.Dto.SearchApplicantRequest;
-import com.querydsl.core.Tuple;
+import com.modong.backend.domain.evaluation.Evaluation;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -31,8 +31,10 @@ public class ApplicantRepositoryCustomImpl implements ApplicantRepositoryCustom{
   public void updateRateByApplicantId(Long applicantId) {
     queryFactory.update(applicant)
         .set(applicant.rate,getRateByApplicantId(applicantId))
+        .set(applicant.countOfEvaluator,getNumOfEvaluatorByApplicantId(applicantId))
         .where(eqApplicantId(applicantId)).execute();
   }
+
 
   @Override
   public Float getRateByApplicantId(Long applicantId) {
@@ -44,7 +46,24 @@ public class ApplicantRepositoryCustomImpl implements ApplicantRepositoryCustom{
             eqEvaluationNotDeleted()
         )
         .fetchOne();
+    if (result == null) {
+      return 0f;
+    }
     return result.floatValue();
+  }
+
+  @Override
+  public Long getNumOfEvaluatorByApplicantId(Long applicantId) {
+    JPQLQuery<Evaluation> count = queryFactory
+            .selectFrom(evaluation)
+            .where(
+                    eqEvaluationApplicantId(applicantId),
+                    eqEvaluationNotDeleted()
+            );
+    if(count.isNull().equals(Boolean.TRUE)){
+      return 0L;
+    }
+    return count.fetchCount();
   }
 
   @Override

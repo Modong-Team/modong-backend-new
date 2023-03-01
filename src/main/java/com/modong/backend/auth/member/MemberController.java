@@ -6,7 +6,7 @@ import com.modong.backend.auth.member.Dto.MemberRegisterRequest;
 import com.modong.backend.auth.member.Dto.MemberResponse;
 import com.modong.backend.auth.support.Auth;
 import com.modong.backend.base.Dto.BaseResponse;
-import com.modong.backend.base.Dto.CheckResponse;
+import com.modong.backend.base.Dto.DuplicatedCheckResponse;
 import com.modong.backend.base.Dto.SavedId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -52,10 +52,10 @@ public class MemberController {
 
   @PostMapping("/member/check")
   @Operation(summary = "중복 아이디 검사", description = "중복 아이디 검사", responses = {
-      @ApiResponse(responseCode = "200", description = "중복 아이디 검사 성공", content = @Content(schema = @Schema(implementation = CheckResponse.class)))
+      @ApiResponse(responseCode = "200", description = "중복 아이디 검사 성공", content = @Content(schema = @Schema(implementation = DuplicatedCheckResponse.class)))
   })
   public ResponseEntity checkMemberId(@RequestBody @Validated MemberCheckRequest memberCheckRequest){
-    CheckResponse checkResponse = new CheckResponse(memberService.checkMemberId(memberCheckRequest));
-    return ResponseEntity.ok(new BaseResponse(checkResponse, HttpStatus.OK.value(), CustomCode.SUCCESS_DUPLICATED_CHECK));
+    DuplicatedCheckResponse duplicatedCheckResponse = new DuplicatedCheckResponse(memberService.checkMemberId(memberCheckRequest));
+    return ResponseEntity.ok(new BaseResponse(duplicatedCheckResponse, HttpStatus.OK.value(), CustomCode.SUCCESS_DUPLICATED_CHECK));
   }
 }

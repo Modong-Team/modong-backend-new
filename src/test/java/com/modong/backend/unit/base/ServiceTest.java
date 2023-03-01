@@ -17,17 +17,8 @@ import static com.modong.backend.Fixtures.ClubFixture.CLUB_START_DATE;
 import static com.modong.backend.Fixtures.EssentialAnswerFixture.ESSENTIAL_ANSWER;
 import static com.modong.backend.Fixtures.EssentialQuestionFixture.ESSENTIAL_QUESTION_ID;
 import static com.modong.backend.Fixtures.EvaluationFixture.COMMENT;
-import static com.modong.backend.Fixtures.EvaluationFixture.COMMENT_A;
-import static com.modong.backend.Fixtures.EvaluationFixture.COMMENT_B;
-import static com.modong.backend.Fixtures.EvaluationFixture.COMMENT_C;
-import static com.modong.backend.Fixtures.EvaluationFixture.EVALUATION_A_ID;
-import static com.modong.backend.Fixtures.EvaluationFixture.EVALUATION_ID;
 import static com.modong.backend.Fixtures.EvaluationFixture.SCORE;
-import static com.modong.backend.Fixtures.EvaluationFixture.SCORE_A;
-import static com.modong.backend.Fixtures.EvaluationFixture.SCORE_B;
-import static com.modong.backend.Fixtures.EvaluationFixture.SCORE_C;
 import static com.modong.backend.Fixtures.EvaluationFixture.UPDATE_COMMENT;
-import static com.modong.backend.Fixtures.EvaluationFixture.UPDATE_COMMENT_A;
 import static com.modong.backend.Fixtures.MemberFixture.EMAIL;
 import static com.modong.backend.Fixtures.MemberFixture.MEMBER_A_EMAIL;
 import static com.modong.backend.Fixtures.MemberFixture.MEMBER_A_MEMBER_ID;
@@ -46,12 +37,10 @@ import static com.modong.backend.Fixtures.MemberFixture.NAME;
 import static com.modong.backend.Fixtures.MemberFixture.PASSWORD;
 import static com.modong.backend.Fixtures.MemberFixture.PHONE;
 import static com.modong.backend.Fixtures.MemoFixture.MEMO_CONTENT;
-import static com.modong.backend.Fixtures.MemoFixture.MEMO_ID;
 import static com.modong.backend.Fixtures.MemoFixture.MEMO_UPDATED_CONTENT;
 import static com.modong.backend.Fixtures.QuestionAnswerFixture.QUESTION_ANSWER;
 import static com.modong.backend.Fixtures.QuestionFixture.QUESTION_ID;
 
-import com.modong.backend.Fixtures.ApplicationFixture;
 import com.modong.backend.auth.member.Dto.MemberRegisterRequest;
 import com.modong.backend.auth.JwtTokenProvider;
 import com.modong.backend.auth.member.MemberRepository;
@@ -65,21 +54,16 @@ import com.modong.backend.domain.application.Dto.ApplicationUpdateRequest;
 import com.modong.backend.domain.club.ClubRepository;
 import com.modong.backend.domain.club.Dto.ClubCreateRequest;
 import com.modong.backend.domain.essentialAnswer.Dto.EssentialAnswerRequest;
-import com.modong.backend.domain.essentialQuestion.EssentialQuestion;
 import com.modong.backend.domain.essentialQuestion.EssentialQuestionRepository;
 import com.modong.backend.domain.evaluation.EvaluationRepository;
 import com.modong.backend.domain.evaluation.dto.EvaluationCreateRequest;
-import com.modong.backend.domain.evaluation.dto.EvaluationDeleteRequest;
-import com.modong.backend.domain.evaluation.dto.EvaluationFindRequest;
 import com.modong.backend.domain.evaluation.dto.EvaluationUpdateRequest;
 import com.modong.backend.domain.memo.MemoRepository;
 import com.modong.backend.domain.memo.dto.MemoCreateRequest;
-import com.modong.backend.domain.memo.dto.MemoDeleteRequest;
 import com.modong.backend.domain.memo.dto.MemoFindRequest;
 import com.modong.backend.domain.memo.dto.MemoUpdateRequest;
-import com.modong.backend.domain.question.Question;
 import com.modong.backend.domain.questionAnswer.Dto.QuestionAnswerRequest;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -163,61 +147,25 @@ public class ServiceTest {
       .questionAnswers(Arrays.asList(questionAnswerRequest)).build();
 
   protected MemoCreateRequest memoCreateRequest = MemoCreateRequest.builder()
-      .applicationId(APPLICATION_ID)
       .applicantId(APPLICANT_ID)
       .content(MEMO_CONTENT)
       .build();
 
   protected MemoUpdateRequest memoUpdateRequest = MemoUpdateRequest.builder()
-      .memoId(MEMO_ID)
       .content(MEMO_UPDATED_CONTENT)
-      .build();
-  protected MemoDeleteRequest memoDeleteRequest = MemoDeleteRequest.builder()
-      .memoId(MEMO_ID)
       .build();
 
   protected MemoFindRequest memoFindRequest = MemoFindRequest.builder()
       .applicantId(APPLICANT_ID)
-      .applicationId(APPLICATION_ID)
       .build();
 
   protected EvaluationCreateRequest evaluationCreateRequest = EvaluationCreateRequest.builder()
-      .applicantId(APPLICANT_ID)
-      .applicationId(APPLICATION_ID)
       .comment(COMMENT)
       .score(SCORE)
       .build();
-  protected EvaluationCreateRequest evaluationCreateRequest_userA = EvaluationCreateRequest.builder()
-      .applicantId(APPLICANT_ID)
-      .applicationId(APPLICATION_ID)
-      .comment(COMMENT_A)
-      .score(SCORE_A)
-      .build();
-  protected EvaluationCreateRequest evaluationCreateRequest_userB = EvaluationCreateRequest.builder()
-      .applicantId(APPLICANT_ID)
-      .applicationId(APPLICATION_ID)
-      .comment(COMMENT_B)
-      .score(SCORE_B)
-      .build();
-  protected EvaluationCreateRequest evaluationCreateRequest_userC = EvaluationCreateRequest.builder()
-      .applicantId(APPLICANT_ID)
-      .applicationId(APPLICATION_ID)
-      .comment(COMMENT_C)
-      .score(SCORE_C)
-      .build();
 
   protected EvaluationUpdateRequest evaluationUpdateRequest = EvaluationUpdateRequest.builder()
-      .evaluationId(EVALUATION_ID)
       .newComment(UPDATE_COMMENT)
       .newScore(SCORE + 1.0f)
       .build();
-  protected EvaluationDeleteRequest evaluationDeleteRequest = EvaluationDeleteRequest.builder()
-      .evaluationId(EVALUATION_ID)
-      .build();
-
-  protected EvaluationFindRequest evaluationFindRequest = EvaluationFindRequest.builder()
-      .applicantId(APPLICANT_ID)
-      .applicationId(APPLICATION_ID)
-      .build();
-
 }

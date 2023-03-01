@@ -46,4 +46,8 @@ public class Form extends BaseTimeEntity {
   public void addQuestion(Question question) {
     this.questions.add(question);
   }
+
+  public void delete(){
+    this.isDeleted = true;
+  }
 }

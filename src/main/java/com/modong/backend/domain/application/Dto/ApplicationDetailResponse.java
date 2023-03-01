@@ -16,8 +16,8 @@ public class ApplicationDetailResponse extends ApplicationSimpleResponse{
   @Schema(description = "지원서 질문 페이지 리스트")
   private List<FormResponse> forms = new ArrayList<>();
 
-  public ApplicationDetailResponse(Application application) {
-    super(application);
+  public ApplicationDetailResponse(Application application, Long clubId) {
+    super(application,clubId);
   }
   public void addEssentialQuestion(EssentialQuestionResponse essentialQuestionResponse){
     this.essentialQuestions.add(essentialQuestionResponse);

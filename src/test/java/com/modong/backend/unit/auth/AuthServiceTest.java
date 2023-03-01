@@ -21,6 +21,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.modong.backend.Fixtures.AuthFixture.REFRESH_TOKEN;
 import static com.modong.backend.Fixtures.AuthFixture.WRONG_REFRESH_TOKEN;
+import static com.modong.backend.Fixtures.ClubFixture.CLUB_ID;
 import static com.modong.backend.Fixtures.MemberFixture.MEMBER_ID;
 import static com.modong.backend.Fixtures.MemberFixture.PASSWORD;
 import static com.modong.backend.Fixtures.MemberFixture.WRONG_PASSWORD;
@@ -40,7 +41,7 @@ public class AuthServiceTest extends ServiceTest {
   private Member member;
   @BeforeEach
   public void init(){
-    member = new Member(memberRegisterRequest);
+    member = new Member(memberRegisterRequest, CLUB_ID);
     member.setEncodedPassword(passwordEncoder.encode(PASSWORD));
     ReflectionTestUtils.setField(member,"id",MemberFixture.ID);
   }

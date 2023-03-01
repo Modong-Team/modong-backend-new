@@ -14,7 +14,6 @@ import com.modong.backend.config.AuthConfig;
 import com.modong.backend.domain.club.ClubService;
 import com.modong.backend.domain.memo.MemoService;
 import com.modong.backend.domain.memo.dto.MemoCreateRequest;
-import com.modong.backend.domain.memo.dto.MemoDeleteRequest;
 import com.modong.backend.domain.memo.dto.MemoFindRequest;
 import com.modong.backend.domain.memo.dto.MemoUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,11 +54,7 @@ public class ControllerTest {
       .build();
 
   protected MemoUpdateRequest memoUpdateRequest = MemoUpdateRequest.builder()
-      .memoId(MEMO_ID)
       .content(MEMO_UPDATED_CONTENT)
-      .build();
-  protected MemoDeleteRequest memoDeleteRequest = MemoDeleteRequest.builder()
-      .memoId(MEMO_ID)
       .build();
 
   protected MemoFindRequest memoFindRequest = MemoFindRequest.builder()

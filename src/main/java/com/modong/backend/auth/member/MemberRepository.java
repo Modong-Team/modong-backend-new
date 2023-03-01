@@ -9,6 +9,7 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
 
   Optional<Member> findByIdAndIsDeletedIsFalse(Long memberId);
 
+  Long countByClubIdAndIsDeletedIsFalse(Long clubId);
   Boolean existsByMemberId(String memberId);
 
   Boolean existsByPhone(String phone);

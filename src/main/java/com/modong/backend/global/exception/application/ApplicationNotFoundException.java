@@ -1,8 +1,8 @@
 package com.modong.backend.global.exception.application;
 
-import com.modong.backend.global.exception.NotFoundException;
+import com.modong.backend.global.exception.BadRequestException;
 
-public class ApplicationNotFoundException extends NotFoundException {
+public class ApplicationNotFoundException extends BadRequestException {
 
   private static final String ERROR_CODE = "APPLICATION_NOT_FOUND";
   private static final String SERVER_MESSAGE = "존재하지 않는 지원서 조회";

@@ -46,7 +46,8 @@ public class ClubService {
   public ClubResponse findByMemberId(Long memberId) {
     //회원 조회 실패시 에러 반환
     Member member = memberRepository.findByIdAndIsDeletedIsFalse(memberId).orElseThrow(() -> new MemberNotFoundException(memberId));
-    Club club = member.getClubs().get(0).getClub();
+    Long clubId = member.getClubId();
+    Club club = clubRepository.findById(clubId).orElseThrow(() -> new ClubNotFoundException(clubId));
     return new ClubResponse(club);
   }
 }

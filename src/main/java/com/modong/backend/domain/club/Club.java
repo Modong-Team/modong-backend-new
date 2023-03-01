@@ -32,6 +32,8 @@ public class Club extends BaseTimeEntity {
   private String startDate;
 
   private String endDate;
+
+  private Long countOfMember;
   @OneToMany(mappedBy = "club")
   private List<ClubMember> members = new ArrayList<>();
   public Club(ClubCreateRequest clubCreateRequest) {
@@ -39,8 +41,8 @@ public class Club extends BaseTimeEntity {
     this.profileImgUrl = clubCreateRequest.getProfileImgUrl();
     this.startDate = clubCreateRequest.getStartDate();
     this.endDate = clubCreateRequest.getEndDate();
+    this.countOfMember = 0L;
   }
-
   public Club(Long id, ClubCreateRequest clubCreateRequest) {
     this.id = id;
     this.name = clubCreateRequest.getName();
@@ -48,7 +50,7 @@ public class Club extends BaseTimeEntity {
     this.startDate = clubCreateRequest.getStartDate();
     this.endDate = clubCreateRequest.getEndDate();
   }
-  public void addMember(ClubMember clubMember){
-    this.members.add(clubMember);
+  public void updateOneCountOfMember(Long count) {
+    this.countOfMember = count;
   }
 }

@@ -1,5 +1,6 @@
 package com.modong.backend.domain.applicant;
 
+import com.modong.backend.auth.support.Auth;
 import com.modong.backend.base.Dto.PageRequest;
 import com.modong.backend.domain.applicant.Dto.ApplicantDetailResponse;
 import com.modong.backend.domain.applicant.Dto.ApplicantCreateRequest;
@@ -45,9 +46,9 @@ public class ApplicantController {
   })
   //, @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC), Pageable pageable)
   public ResponseEntity getApplicantsByApplicationId(@Validated @PathVariable(name="application_id") Long applicationId, @Validated
-      SearchApplicantRequest searchApplicantRequest, @Validated PageRequest pageRequest){
+      SearchApplicantRequest searchApplicantRequest, @Validated PageRequest pageRequest, @Auth Long memberId){
     Pageable pageable = pageRequest.of();
-    PageApplicantsResponse applicants = applicantService.filterByCondition(applicationId, searchApplicantRequest, pageable);
+    PageApplicantsResponse applicants = applicantService.filterByCondition(applicationId, searchApplicantRequest, pageable, memberId);
     return ResponseEntity.ok(new BaseResponse(applicants, HttpStatus.OK.value(), CustomCode.SUCCESS_GET_LIST));
   }
 
@@ -55,8 +56,8 @@ public class ApplicantController {
   @Operation(summary = "지원자 답변 조회", description = "지원자를 ID로 조회해 질문에 어떤 답을 했는지 조회 한다.", responses = {
       @ApiResponse(responseCode = "200", description = "지원자 조회 성공", content = @Content(schema = @Schema(implementation = ApplicantDetailResponse.class)))
   })
-  public ResponseEntity getApplicantById(@Validated @PathVariable(name="applicant_id") Long applicantId){
-    ApplicantDetailResponse applicant = applicantService.findById(applicantId);
+  public ResponseEntity getApplicantById(@Validated @PathVariable(name="applicant_id") Long applicantId, @Auth Long memberId){
+    ApplicantDetailResponse applicant = applicantService.findById(applicantId, memberId);
     return ResponseEntity.ok(new BaseResponse(applicant, HttpStatus.OK.value(), CustomCode.SUCCESS_GET));
   }
 
@@ -64,8 +65,8 @@ public class ApplicantController {
   @Operation(summary = "지원자 상태 변경", description = "지원자를 상태를 변경한다. ", responses = {
       @ApiResponse(responseCode = "200", description = "지원자 상태 변경 성공", content = @Content(schema = @Schema(implementation = SavedId.class)))
   })
-  public ResponseEntity changeApplicantStatus(@Validated @PathVariable(name="applicant_id") Long applicantId, @RequestBody ChangeApplicantStatusRequest applicantStatus){
-    SavedId savedId = new SavedId(applicantService.changeApplicantStatus(applicantId,applicantStatus));
+  public ResponseEntity changeApplicantStatus(@Validated @PathVariable(name="applicant_id") Long applicantId, @RequestBody ChangeApplicantStatusRequest applicantStatus, @Auth Long memberId){
+    SavedId savedId = new SavedId(applicantService.changeApplicantStatus(applicantId,applicantStatus,memberId));
     return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.OK.value(), CustomCode.SUCCESS_UPDATE));
   }
 
@@ -73,8 +74,8 @@ public class ApplicantController {
   @Operation(summary = "지원자의 탈락 상태 취소", description = "탈락인 지원자의 상태를 탈락취소로 변경한다. ", responses = {
       @ApiResponse(responseCode = "200", description = "지원자의 탈락 상태 취소", content = @Content(schema = @Schema(implementation = SavedId.class)))
   })
-  public ResponseEntity failApplicantCancel(@Validated @PathVariable(name="applicant_id") Long applicantId){
-    SavedId savedId = new SavedId(applicantService.cancelFailStatus(applicantId));
+  public ResponseEntity failApplicantCancel(@Validated @PathVariable(name="applicant_id") Long applicantId, @Auth Long memberId){
+    SavedId savedId = new SavedId(applicantService.cancelFailStatus(applicantId,memberId));
     return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.OK.value(), CustomCode.SUCCESS_UPDATE));
   }
 

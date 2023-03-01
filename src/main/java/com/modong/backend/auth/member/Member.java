@@ -2,11 +2,9 @@ package com.modong.backend.auth.member;
 
 import com.modong.backend.Enum.ProviderName;
 import com.modong.backend.auth.member.Dto.MemberRegisterRequest;
-import com.modong.backend.auth.memberRole.MemberRole;
-import com.modong.backend.auth.role.Role;
+import com.modong.backend.auth.role.RoleName;
 import com.modong.backend.base.BaseTimeEntity;
 import com.modong.backend.domain.club.clubMemeber.ClubMember;
-import com.modong.backend.domain.evaluation.Evaluation;
 import java.util.ArrayList;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -35,24 +33,20 @@ public class Member extends BaseTimeEntity {
   private String email;
   private String phone;
 
+  private Long clubId;
   @Enumerated(EnumType.STRING)
   private ProviderName providerName;
-  @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-  private List<ClubMember> clubs = new ArrayList<>();
-  @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-  private List<MemberRole> roles = new ArrayList<>();
+  @Enumerated(EnumType.STRING)
+  private RoleName role;
 
-  public Member(MemberRegisterRequest memberRegisterRequest) {
+  public Member(MemberRegisterRequest memberRegisterRequest,Long clubId) {
     this.memberId = memberRegisterRequest.getMemberId();
     this.name = memberRegisterRequest.getName();
     this.email = memberRegisterRequest.getEmail();
     this.phone = memberRegisterRequest.getPhone();
     this.providerName = ProviderName.MODONG;
-    this.roles.add(new MemberRole(this,Role.basic()));
-  }
-
-  public void addClub(ClubMember club){
-    this.clubs.add(club);
+    this.role = RoleName.ROLE_USER;
+    this.clubId = clubId;
   }
 
   public void setEncodedPassword(String encodedPassword){

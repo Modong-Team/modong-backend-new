@@ -12,6 +12,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
+import com.modong.backend.Fixtures.MemberFixture;
+import com.modong.backend.auth.member.Member;
 import com.modong.backend.domain.application.Application;
 import com.modong.backend.domain.application.ApplicationService;
 import com.modong.backend.domain.application.Dto.ApplicationDetailResponse;
@@ -33,8 +35,9 @@ public class ApplicationServiceTest extends ServiceTest {
 
   @Autowired
   private ApplicationService applicationService;
-
   private Club club;
+
+  private Member member;
   private Application application, updatedApplication;
 
   private EssentialQuestion essentialQuestion;
@@ -43,13 +46,21 @@ public class ApplicationServiceTest extends ServiceTest {
 
     club = new Club(clubCreateRequest);
 
+    member = new Member(memberRegisterRequest,CLUB_ID);
+
     application = new Application(applicationCreateRequest,club);
 
     updatedApplication = new Application(applicationCreateRequest,club);
 
     essentialQuestion = new EssentialQuestion(ESSENTIAL_QUESTION_CONTENT,true);
 
+    ReflectionTestUtils.setField(club,"id",CLUB_ID);
+
     ReflectionTestUtils.setField(application,"id",APPLICATION_ID);
+
+    ReflectionTestUtils.setField(application,"club",club);
+
+    ReflectionTestUtils.setField(member,"clubId",CLUB_ID);
   }
   @DisplayName("지원서 생성 성공")
   @Test
@@ -57,15 +68,17 @@ public class ApplicationServiceTest extends ServiceTest {
     //given
     ReflectionTestUtils.setField(club,"id",CLUB_ID);
 
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
+
     given(clubRepository.findById(anyLong())).willReturn(Optional.of(club));
     given(applicationRepository.save(any())).willReturn(application);
     given(essentialQuestionRepository.findById(anyLong())).willReturn(Optional.of(essentialQuestion));
 
     //when
-    Long savedId = applicationService.createApplication(applicationCreateRequest);
+    Long savedId = applicationService.createApplication(applicationCreateRequest, MemberFixture.ID);
 
     //then
-    assertThatCode(() -> applicationService.createApplication(applicationCreateRequest)).doesNotThrowAnyException();
+    assertThatCode(() -> applicationService.createApplication(applicationCreateRequest, MemberFixture.ID)).doesNotThrowAnyException();
 
     assertThat(savedId).isEqualTo(APPLICATION_ID);
   }
@@ -74,49 +87,51 @@ public class ApplicationServiceTest extends ServiceTest {
   @Test
   public void throwExceptionIfIdNotFound_Create(){
     //given, when
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
 
     given(clubRepository.findById(anyLong()))
         .willReturn(Optional.empty());
 
     //then
-    assertThatThrownBy(() -> applicationService.createApplication(applicationCreateRequest))
+    assertThatThrownBy(() -> applicationService.createApplication(applicationCreateRequest, MemberFixture.ID))
         .isInstanceOf(ClubNotFoundException.class);
   }
   @DisplayName("지원서 생성 실패 - 지원서의 UrlId가 중복이라면 UrlIdDuplicateException 가 발생해야 한다.")
   @Test
   public void throwExceptionIfUrlIdIsDuplicate(){
     //given, when
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
 
     given(clubRepository.findById(anyLong())).willReturn(Optional.of(club));
 
-    given(applicationRepository.existsByUrlId(anyString()))
+    given(applicationRepository.existsByUrlIdAndIsDeletedIsFalse(anyString()))
         .willReturn(true);
 
     //then
-    assertThatThrownBy(() -> applicationService.createApplication(applicationCreateRequest))
+    assertThatThrownBy(() -> applicationService.createApplication(applicationCreateRequest, MemberFixture.ID))
         .isInstanceOf(UrlIdDuplicateException.class);
   }
   @DisplayName("지원서 상세 조회 성공 (Id)")
   @Test
   public void SuccessReadApplication_Id(){
     //given
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
 
-    given(applicationRepository.findById(anyLong())).willReturn(Optional.of(application));
+    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(application));
 
     //when
-    ApplicationDetailResponse response = applicationService.findDetailById(APPLICATION_ID);
+    ApplicationDetailResponse response = applicationService.findDetailById(APPLICATION_ID, MemberFixture.ID);
 
     //then
-    assertThatCode(() -> applicationService.findDetailById(APPLICATION_ID)).doesNotThrowAnyException();
+    assertThatCode(() -> applicationService.findDetailById(APPLICATION_ID, MemberFixture.ID)).doesNotThrowAnyException();
 
-    assertThat(response).usingRecursiveComparison().isEqualTo(new ApplicationDetailResponse(application));
+    assertThat(response).usingRecursiveComparison().isEqualTo(new ApplicationDetailResponse(application,CLUB_ID));
   }
   @DisplayName("지원서 상세 조회 성공 (UrlId)")
   @Test
   public void SuccessReadApplication_UrlID(){
     //given
-
-    given(applicationRepository.findByUrlId(anyString())).willReturn(Optional.of(application));
+    given(applicationRepository.findByUrlIdAndIsDeletedIsFalse(anyString())).willReturn(Optional.of(application));
 
     //when
     ApplicationDetailResponse response = applicationService.findDetailByUrlId(URL_ID);
@@ -124,24 +139,25 @@ public class ApplicationServiceTest extends ServiceTest {
     //then
     assertThatCode(() -> applicationService.findDetailByUrlId(URL_ID)).doesNotThrowAnyException();
 
-    assertThat(response).usingRecursiveComparison().isEqualTo(new ApplicationDetailResponse(application));
+    assertThat(response).usingRecursiveComparison().isEqualTo(new ApplicationDetailResponse(application,CLUB_ID));
   }
   @DisplayName("지원서 상세 조회 실패 (Id)- 요청한 id를 가진 지원서가 없을 경우 ApplicationNotFoundException 가 발생해야 한다.")
   @Test
   public void throwExceptionIfIdNotFound_Read(){
     //given, when
-    given(applicationRepository.findById(anyLong()))
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
+    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong()))
         .willReturn(Optional.empty());
 
     //then
-    assertThatThrownBy(() -> applicationService.findDetailById(APPLICATION_ID))
+    assertThatThrownBy(() -> applicationService.findDetailById(APPLICATION_ID, MemberFixture.ID))
         .isInstanceOf(ApplicationNotFoundException.class);
   }
   @DisplayName("지원서 상세 조회 실패 (UrlId)- 요청한 urlId를 가진 지원서가 없을 경우 ApplicationNotFoundException 가 발생해야 한다.")
   @Test
   public void throwExceptionIfUrlIdNotFound_Read(){
     //given, when
-    given(applicationRepository.findByUrlId(anyString()))
+    given(applicationRepository.findByUrlIdAndIsDeletedIsFalse(anyString()))
         .willReturn(Optional.empty());
 
     //then
@@ -154,18 +170,19 @@ public class ApplicationServiceTest extends ServiceTest {
   public void SuccessUpdateApplication(){
     //given
     ReflectionTestUtils.setField(updatedApplication,"id",APPLICATION_ID);
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
 
-    given(applicationRepository.findById(anyLong())).willReturn(Optional.of(application));
+    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(application));
     given(essentialQuestionRepository.findById(anyLong())).willReturn(Optional.of(essentialQuestion));
     given(applicationRepository.save(any())).willReturn(updatedApplication);
     //when
 
-    Long savedId = applicationService.updateApplication(APPLICATION_ID,applicationUpdateRequest);
+    Long savedId = applicationService.updateApplication(APPLICATION_ID,applicationUpdateRequest, MemberFixture.ID);
 
     //then
     assertThat(savedId).isEqualTo(APPLICATION_ID);
 
-    assertThatCode(() -> applicationService.updateApplication(APPLICATION_ID,applicationUpdateRequest)).doesNotThrowAnyException();
+    assertThatCode(() -> applicationService.updateApplication(APPLICATION_ID,applicationUpdateRequest, MemberFixture.ID)).doesNotThrowAnyException();
 
 
   }
@@ -174,11 +191,12 @@ public class ApplicationServiceTest extends ServiceTest {
   @Test
   public void throwExceptionIfIdNotFound_Update(){
     //given, when
-    given(applicationRepository.findById(anyLong()))
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
+    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong()))
         .willReturn(Optional.empty());
 
     //then
-    assertThatThrownBy(() -> applicationService.updateApplication(APPLICATION_ID,applicationUpdateRequest))
+    assertThatThrownBy(() -> applicationService.updateApplication(APPLICATION_ID,applicationUpdateRequest, MemberFixture.ID))
         .isInstanceOf(ApplicationNotFoundException.class);
   }
 
@@ -187,11 +205,12 @@ public class ApplicationServiceTest extends ServiceTest {
   @Test
   public void throwExceptionIfIdNotFound_Delete(){
     //given, when
-    given(applicationRepository.findById(anyLong()))
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
+    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong()))
         .willReturn(Optional.empty());
 
     //then
-    assertThatThrownBy(() -> applicationService.deleteApplication(APPLICATION_ID))
+    assertThatThrownBy(() -> applicationService.deleteApplication(APPLICATION_ID, MemberFixture.ID))
         .isInstanceOf(ApplicationNotFoundException.class);
   }
 
@@ -203,13 +222,14 @@ public class ApplicationServiceTest extends ServiceTest {
     ReflectionTestUtils.setField(updatedApplication,"id",APPLICATION_ID);
     application.open();
     updatedApplication.close();
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
 
-    given(applicationRepository.findById(anyLong()))
+    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong()))
         .willReturn(Optional.of(application));
     given(applicationRepository.save(any()))
         .willReturn(updatedApplication);
     //then
-    assertThatCode(() -> applicationService.close(APPLICATION_ID)).doesNotThrowAnyException();
+    assertThatCode(() -> applicationService.close(APPLICATION_ID, MemberFixture.ID)).doesNotThrowAnyException();
 
   }
 
@@ -219,11 +239,12 @@ public class ApplicationServiceTest extends ServiceTest {
   public void throwExceptionIfIdNotFound_Close(){
     //given, when
     application.open();
-    given(applicationRepository.findById(anyLong()))
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
+    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong()))
         .willReturn(Optional.empty());
 
     //then
-    assertThatThrownBy(() -> applicationService.close(APPLICATION_ID))
+    assertThatThrownBy(() -> applicationService.close(APPLICATION_ID, MemberFixture.ID))
         .isInstanceOf(ApplicationNotFoundException.class);
   }
 
@@ -232,11 +253,12 @@ public class ApplicationServiceTest extends ServiceTest {
   public void throwBadRequestException_Close(){
     //given, when
     application.close();
-    given(applicationRepository.findById(anyLong()))
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
+    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong()))
         .willReturn(Optional.of(application));
 
     //then
-    assertThatThrownBy(() -> applicationService.close(APPLICATION_ID))
+    assertThatThrownBy(() -> applicationService.close(APPLICATION_ID, MemberFixture.ID))
         .isInstanceOf(StatusBadRequestException.class);
   }
 
@@ -248,15 +270,16 @@ public class ApplicationServiceTest extends ServiceTest {
 
     application.close();
     updatedApplication.open();
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
 
-    given(applicationRepository.findById(anyLong()))
+    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong()))
         .willReturn(Optional.of(application));
 
     given(applicationRepository.save(any()))
         .willReturn(updatedApplication);
 
     //then
-    assertThatCode(() -> applicationService.open(APPLICATION_ID)).doesNotThrowAnyException();
+    assertThatCode(() -> applicationService.open(APPLICATION_ID, MemberFixture.ID)).doesNotThrowAnyException();
 
   }
 
@@ -264,11 +287,12 @@ public class ApplicationServiceTest extends ServiceTest {
   @Test
   public void throwExceptionIfIdNotFound_Open(){
     //given, when
-    given(applicationRepository.findById(anyLong()))
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
+    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong()))
         .willReturn(Optional.empty());
 
     //then
-    assertThatThrownBy(() -> applicationService.open(APPLICATION_ID))
+    assertThatThrownBy(() -> applicationService.open(APPLICATION_ID, MemberFixture.ID))
         .isInstanceOf(ApplicationNotFoundException.class);
   }
 
@@ -278,12 +302,13 @@ public class ApplicationServiceTest extends ServiceTest {
     //given, when
 
     application.open();
+    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.ofNullable(member));
 
-    given(applicationRepository.findById(anyLong()))
+    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong()))
         .willReturn(Optional.of(application));
 
     //then
-    assertThatThrownBy(() -> applicationService.open(APPLICATION_ID))
+    assertThatThrownBy(() -> applicationService.open(APPLICATION_ID, MemberFixture.ID))
         .isInstanceOf(StatusBadRequestException.class);
   }
 

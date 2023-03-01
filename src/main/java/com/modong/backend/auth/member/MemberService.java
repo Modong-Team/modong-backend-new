@@ -45,15 +45,16 @@ public class MemberService {
       throw new DuplicateMemberIdException();
     }
 
-    Member member = new Member(memberRegisterRequest);
+    Member member = new Member(memberRegisterRequest,club.getId());
 
     member.setEncodedPassword(passwordEncoder.encode(memberRegisterRequest.getPassword()));
 
-    ClubMember clubMember = new ClubMember(club,member);
-
-    member.addClub(clubMember);
-
     Member savedMember = memberRepository.save(member);
+
+    club.updateOneCountOfMember(memberRepository.countByClubIdAndIsDeletedIsFalse(club.getId()));
+
+    clubRepository.save(club);
+
     return savedMember.getId();
   }
 

@@ -38,7 +38,12 @@ public class AuthService {
     // RefreshToken 있는지 확인 후 토큰 두개 반환
     RefreshToken savedToken = refreshTokenRepository.findByMemberId(findMember.getId())
         .orElse(new RefreshToken(issueRefreshToken(findMember),findMember.getId()));
-
+    try {// 토큰 만료기간이 지났으면 재발행
+      jwtTokenProvider.validateToken(savedToken.getRefreshToken());
+    }catch (TokenNotValidException e){
+      savedToken.update(issueRefreshToken(findMember));
+    }
+    
     refreshTokenRepository.save(savedToken);
 
     return new TokenResponse(findMember.getId(), issueAccessToken(findMember),savedToken.getRefreshToken());

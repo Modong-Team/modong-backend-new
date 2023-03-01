@@ -21,7 +21,6 @@ import com.modong.backend.domain.memo.Memo;
 import com.modong.backend.domain.memo.MemoService;
 import com.modong.backend.domain.memo.dto.MemoResponse;
 import com.modong.backend.global.exception.applicant.ApplicantNotFoundException;
-import com.modong.backend.global.exception.application.ApplicationNotFoundException;
 import com.modong.backend.global.exception.auth.NoPermissionCreateException;
 import com.modong.backend.global.exception.auth.NoPermissionDeleteException;
 import com.modong.backend.global.exception.auth.NoPermissionReadException;
@@ -53,7 +52,7 @@ public class MemoServiceTest extends ServiceTest {
     club = new Club(clubCreateRequest);
     another = new Club(clubCreateRequest);
 
-    member = new Member(memberRegisterRequest);
+    member = new Member(memberRegisterRequest, CLUB_ID);
 
     application = new Application(applicationCreateRequest,club);
 
@@ -69,6 +68,7 @@ public class MemoServiceTest extends ServiceTest {
     memo = new Memo(memoCreateRequest,member,applicant);
 
     ReflectionTestUtils.setField(memo,"id", MEMO_ID);
+    ReflectionTestUtils.setField(applicant,"application", application);
 
   }
 
@@ -78,11 +78,10 @@ public class MemoServiceTest extends ServiceTest {
     //given
 
     given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(member));
-    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(application));
     given(applicantRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(applicant));
     given(memoRepository.save(any())).willReturn(memo);
     //생성 권한 주기
-    member.addClub(new ClubMember(club,member));
+    ReflectionTestUtils.setField(member,"clubId",CLUB_ID);
 
 
     //when
@@ -99,7 +98,6 @@ public class MemoServiceTest extends ServiceTest {
     //given, when
 
     given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.empty());
-    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(application));
     given(applicantRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(applicant));
 
     //then
@@ -107,26 +105,12 @@ public class MemoServiceTest extends ServiceTest {
         .isInstanceOf(MemberNotFoundException.class);
   }
 
-  @DisplayName("메모 생성 실패 - 지원서 조회 실패")
-  @Test
-  public void FailCreateMemo_ApplicationNotFound(){
-    //given, when
-
-    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(member));
-    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.empty());
-    given(applicantRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(applicant));
-
-    //then
-    assertThatThrownBy(() -> memoService.create(memoCreateRequest,MemberFixture.ID))
-        .isInstanceOf(ApplicationNotFoundException.class);
-  }
   @DisplayName("메모 생성 실패 - 지원자 조회 실패")
   @Test
   public void FailCreateMemo_ApplicantNotFound(){
     //given, when
 
     given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(member));
-    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(application));
     given(applicantRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.empty());
 
     //then
@@ -138,11 +122,10 @@ public class MemoServiceTest extends ServiceTest {
   public void FailCreateMemo_UnAuthorized(){
     //given, when
     given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(member));
-    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(application));
     given(applicantRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(applicant));
 
     //생성 권한 없는 경우
-    member.addClub(new ClubMember(another,member));
+    ReflectionTestUtils.setField(member,"clubId",another.getId());
 
     //then
     assertThatThrownBy(() -> memoService.create(memoCreateRequest,MemberFixture.ID))
@@ -159,10 +142,10 @@ public class MemoServiceTest extends ServiceTest {
     given(memoRepository.save(any())).willReturn(memo);
 
     //when
-    Long savedId = memoService.update(memoUpdateRequest,MemberFixture.ID);
+    Long savedId = memoService.update(memoUpdateRequest,MEMO_ID,MemberFixture.ID);
 
     //then
-    assertThatCode(() -> memoService.update(memoUpdateRequest,MemberFixture.ID)).doesNotThrowAnyException();
+    assertThatCode(() -> memoService.update(memoUpdateRequest,MEMO_ID,MemberFixture.ID)).doesNotThrowAnyException();
 
     assertThat(savedId).isEqualTo(MEMO_ID);
   }
@@ -175,7 +158,7 @@ public class MemoServiceTest extends ServiceTest {
     given(memoRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(memo));
 
     //then
-    assertThatThrownBy(() -> memoService.update(memoUpdateRequest,MemberFixture.ID))
+    assertThatThrownBy(() -> memoService.update(memoUpdateRequest,MEMO_ID,MemberFixture.ID))
         .isInstanceOf(MemberNotFoundException.class);
   }
 
@@ -189,7 +172,7 @@ public class MemoServiceTest extends ServiceTest {
     //수정 권한 없게 설정
     ReflectionTestUtils.setField(memo,"creatorId", member.getId()+1L);
     //then
-    assertThatThrownBy(() -> memoService.update(memoUpdateRequest,MemberFixture.ID))
+    assertThatThrownBy(() -> memoService.update(memoUpdateRequest,MEMO_ID,MemberFixture.ID))
         .isInstanceOf(NoPermissionUpdateException.class);
   }
   @DisplayName("메모 삭제 성공")
@@ -202,10 +185,10 @@ public class MemoServiceTest extends ServiceTest {
     given(memoRepository.save(any())).willReturn(memo);
 
     //when
-    memoService.delete(memoDeleteRequest,MemberFixture.ID);
+    memoService.delete(MEMO_ID,MemberFixture.ID);
 
     //then
-    assertThatCode(() -> memoService.delete(memoDeleteRequest,MemberFixture.ID)).doesNotThrowAnyException();
+    assertThatCode(() -> memoService.delete(MEMO_ID,MemberFixture.ID)).doesNotThrowAnyException();
 
   }
   @DisplayName("메모 삭제 실패 - 회원 조회 실패")
@@ -217,7 +200,7 @@ public class MemoServiceTest extends ServiceTest {
     given(memoRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(memo));
 
     //then
-    assertThatThrownBy(() -> memoService.delete(memoDeleteRequest,MemberFixture.ID))
+    assertThatThrownBy(() -> memoService.delete(MEMO_ID,MemberFixture.ID))
         .isInstanceOf(MemberNotFoundException.class);
   }
 
@@ -232,7 +215,7 @@ public class MemoServiceTest extends ServiceTest {
     //삭제 권한 없게 설정
     ReflectionTestUtils.setField(memo,"creatorId", member.getId()+1L);
     //then
-    assertThatThrownBy(() -> memoService.delete(memoDeleteRequest,MemberFixture.ID))
+    assertThatThrownBy(() -> memoService.delete(MEMO_ID,MemberFixture.ID))
         .isInstanceOf(NoPermissionDeleteException.class);
   }
   @DisplayName("지원자에 대한 모든 메모 조회 성공")
@@ -241,12 +224,11 @@ public class MemoServiceTest extends ServiceTest {
     //given
 
     given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(member));
-    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(application));
     given(applicantRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(applicant));
     given(memoRepository.findAllByApplicantIdAndIsDeletedIsFalse(anyLong())).willReturn(Arrays.asList(memo));
 
     //조회 권한 주기
-    member.addClub(new ClubMember(club,member));
+    ReflectionTestUtils.setField(member,"clubId",CLUB_ID);
 
     List<MemoResponse> expected = Arrays.asList(new MemoResponse(memo,member, APPLICATION_ID, APPLICANT_ID));
     //when
@@ -263,7 +245,6 @@ public class MemoServiceTest extends ServiceTest {
     //given, when
 
     given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.empty());
-    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(application));
     given(applicantRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(applicant));
 
     //then
@@ -271,30 +252,16 @@ public class MemoServiceTest extends ServiceTest {
         .isInstanceOf(MemberNotFoundException.class);
   }
 
-  @DisplayName("지원자에 대한 모든 메모 조회 실패 - 지원서 조회 실패")
-  @Test
-  public void FailFindMemos_ApplicationNotFound(){
-    //given, when
-
-    given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(member));
-    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.empty());
-    given(applicantRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(applicant));
-
-    //then
-    assertThatThrownBy(() -> memoService.findAllByApplication(memoFindRequest,MemberFixture.ID))
-        .isInstanceOf(ApplicationNotFoundException.class);
-  }
   @DisplayName("지원자에 대한 모든 메모 조회 실패 - 권한 없음(회원의 동아리와 지원서를 수정할 수 있는 동아리가 다를 경우)")
   @Test
   public void FailFindMemos_UnAuthorized(){
     //given, when
 
     given(memberRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(member));
-    given(applicationRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(application));
     given(applicantRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(applicant));
 
     //조회 권한 없게 설정
-    member.addClub(new ClubMember(another,member));
+    ReflectionTestUtils.setField(member,"clubId",another.getId());
     //then
     assertThatThrownBy(() -> memoService.findAllByApplication(memoFindRequest,MemberFixture.ID))
         .isInstanceOf(NoPermissionReadException.class);

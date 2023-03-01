@@ -1,6 +1,8 @@
 package com.modong.backend.domain.application;
 
 import com.modong.backend.Enum.StatusCode;
+import com.modong.backend.auth.member.Member;
+import com.modong.backend.auth.member.MemberRepository;
 import com.modong.backend.domain.application.Dto.ApplicationCreateRequest;
 import com.modong.backend.domain.application.Dto.ApplicationDetailResponse;
 import com.modong.backend.domain.application.Dto.ApplicationSimpleResponse;
@@ -16,9 +18,17 @@ import com.modong.backend.domain.form.dto.FormResponse;
 import com.modong.backend.global.exception.application.ApplicationNotFoundException;
 import com.modong.backend.global.exception.application.UrlIdDuplicateException;
 import com.modong.backend.global.exception.StatusBadRequestException;
+import com.modong.backend.global.exception.auth.NoPermissionCreateException;
+import com.modong.backend.global.exception.auth.NoPermissionDeleteException;
+import com.modong.backend.global.exception.auth.NoPermissionReadException;
+import com.modong.backend.global.exception.auth.NoPermissionUpdateException;
 import com.modong.backend.global.exception.club.ClubNotFoundException;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.modong.backend.global.exception.member.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,43 +42,65 @@ public class ApplicationService {
   private final ClubRepository clubRepository;
   private final EssentialQuestionService essentialQuestionService;
 
-  public ApplicationDetailResponse findDetailById(Long applicationId) {
+  private final MemberRepository memberRepository;
 
-    Application application = applicationRepository.findById(applicationId).orElseThrow(() -> new ApplicationNotFoundException(applicationId));
+  public ApplicationDetailResponse findDetailById(Long applicationId, Long memberId) {
 
-    return getDetailResponse(application);
+    Member member = findMemberById(memberId);
+
+    Application application = applicationRepository.findByIdAndIsDeletedIsFalse(applicationId).orElseThrow(() -> new ApplicationNotFoundException(applicationId));
+
+    Long clubId = application.getClub().getId();
+
+    if(clubId.equals(member.getClubId())){
+      return getDetailResponse(application,clubId);
+    }
+    else{
+      throw new NoPermissionReadException();
+    }
   }
 
-  public Application findSimpleById(Long applicationId){
-    Application application = applicationRepository.findById(applicationId).orElseThrow(() -> new ApplicationNotFoundException(applicationId));
-    return application;
-  }
+  public List<ApplicationSimpleResponse> findAllByClubId(Long clubId, Long memberId) {
+    Member member = findMemberById(memberId);
 
-  public List<ApplicationSimpleResponse> findAllByClubId(Long clubId) {
-    List<ApplicationSimpleResponse> applications = applicationRepository.findAllByClubId(clubId).stream().map(ApplicationSimpleResponse::new).collect(
-        Collectors.toList());
-    return applications;
+    if(clubId.equals(member.getClubId())){
+      List<Application> applications = applicationRepository.findAllByClubIdAndIsDeletedIsFalse(clubId);
+      List<ApplicationSimpleResponse> result = new ArrayList<>();
+      for(Application application: applications){
+        result.add(new ApplicationSimpleResponse(application,clubId));
+      }
+      return result;
+    }
+    else{
+      throw new NoPermissionReadException();
+    }
   }
 
   @Transactional
-  public Long createApplication(ApplicationCreateRequest applicationCreateRequest) {
+  public Long createApplication(ApplicationCreateRequest applicationCreateRequest, Long memberId) {
+    Long clubId = applicationCreateRequest.getClubId();
+    Member member = findMemberById(memberId);
 
-    Club club = clubRepository.findById(applicationCreateRequest.getClubId())
-        .orElseThrow(() -> new ClubNotFoundException(applicationCreateRequest.getClubId()));
+    if(clubId.equals(member.getClubId())) {
+      Club club = clubRepository.findById(clubId)
+              .orElseThrow(() -> new ClubNotFoundException(applicationCreateRequest.getClubId()));
 
-    Application application = new Application(applicationCreateRequest,club);
+      Application application = new Application(applicationCreateRequest,club);
 
-    //지원서 링크 중복 검사
-    if(applicationRepository.existsByUrlId(applicationCreateRequest.getUrlId())){
-      throw new UrlIdDuplicateException();
+      //지원서 링크 중복 검사
+      if(applicationRepository.existsByUrlIdAndIsDeletedIsFalse(applicationCreateRequest.getUrlId())){
+        throw new UrlIdDuplicateException();
+      }
+
+      //필수 질문 id로 저장
+      setEssentialQuestion(applicationCreateRequest.getEssentialQuestionIds(), application);
+
+      Application saved = applicationRepository.save(application);
+
+      return saved.getId();
     }
+    else throw new NoPermissionCreateException();
 
-    //필수 질문 id로 저장
-    setEssentialQuestion(applicationCreateRequest.getEssentialQuestionIds(), application);
-
-    Application saved = applicationRepository.save(application);
-
-    return saved.getId();
   }
 
   private void setEssentialQuestion(List<Long> applicationCreateRequest, Application application) {
@@ -81,40 +113,57 @@ public class ApplicationService {
 
 
   @Transactional
-  //필수 질문 id로 업데이트
-  public Long updateApplication(Long applicationId, ApplicationUpdateRequest applicationUpdateRequest) {
+  //필수 질문 id로 업데이트, 권한 - 사용자의 동아리와 지원서 동아리 일치 및 지원서 모집 전
+  public Long updateApplication(Long applicationId, ApplicationUpdateRequest applicationUpdateRequest, Long memberId) {
 
-    Application application = applicationRepository.findById(applicationId).orElseThrow(() -> new ApplicationNotFoundException(applicationId));
+    Member member = findMemberById(memberId);
 
-    application.update(applicationUpdateRequest);
-    //기존 필수 질문들 삭제
-    application.getEssentials().removeAll(application.getEssentials());
-    //필수 질문 설정
-    setEssentialQuestion(applicationUpdateRequest.getEssentialQuestionIds(), application);
+    Application application = applicationRepository.findByIdAndIsDeletedIsFalse(applicationId).orElseThrow(() -> new ApplicationNotFoundException(applicationId));
 
-    Application saved = applicationRepository.save(application);
+    Long clubId = application.getClub().getId();
 
+    if(clubId.equals(member.getClubId()) && application.eqStatus(StatusCode.BEFORE_OPENING)) {
+      application.update(applicationUpdateRequest);
+      //기존 필수 질문들 삭제
+      application.getEssentials().removeAll(application.getEssentials());
+      //필수 질문 설정
+      setEssentialQuestion(applicationUpdateRequest.getEssentialQuestionIds(), application);
 
-    return saved.getId();
+      Application saved = applicationRepository.save(application);
+
+      return saved.getId();
+    }
+    else throw new NoPermissionUpdateException();
   }
 
 
 
   @Transactional
-  public void deleteApplication(Long applicationId) {
-    Application application = applicationRepository.findById(applicationId).orElseThrow(() -> new ApplicationNotFoundException(applicationId));
-    applicationRepository.delete(application);
+  public void deleteApplication(Long applicationId, Long memberId) {
+
+    Member member = findMemberById(memberId);
+
+    Application application = applicationRepository.findByIdAndIsDeletedIsFalse(applicationId).orElseThrow(() -> new ApplicationNotFoundException(applicationId));
+
+    Long clubId = application.getClub().getId();
+
+    if(clubId.equals(member.getClubId())){
+      application.delete();
+      applicationRepository.save(application);
+    }
+    else throw new NoPermissionDeleteException();
   }
 
   public ApplicationDetailResponse findDetailByUrlId(String urlId) {
-    Application application = applicationRepository.findByUrlId(urlId).orElseThrow(() -> new ApplicationNotFoundException(urlId));
 
-    return getDetailResponse(application);
+    Application application = applicationRepository.findByUrlIdAndIsDeletedIsFalse(urlId).orElseThrow(() -> new ApplicationNotFoundException(urlId));
 
+    return getDetailResponse(application,application.getClub().getId());
   }
 
-  private ApplicationDetailResponse getDetailResponse(Application application) {
-    ApplicationDetailResponse response = new ApplicationDetailResponse(application);
+
+  private ApplicationDetailResponse getDetailResponse(Application application, Long clubId) {
+    ApplicationDetailResponse response = new ApplicationDetailResponse(application,clubId);
 
     for(ApplicationEssential applicationEssential : application.getEssentials()){
       response.addEssentialQuestion(new EssentialQuestionResponse(applicationEssential.getEssentialQuestion()));
@@ -128,24 +177,52 @@ public class ApplicationService {
   }
 
   @Transactional
-  public Long close(Long applicationId) {
+  public Long close(Long applicationId, Long memberId) {
+
+    Member member = findMemberById(memberId);
+
     Application application = findSimpleById(applicationId);
-    if(application.eqStatus(StatusCode.CLOSE)){
-      throw new StatusBadRequestException();
+
+    Long clubId = application.getClub().getId();
+
+    if(clubId.equals(member.getClubId())){
+      if(application.eqStatus(StatusCode.CLOSE)){
+        throw new StatusBadRequestException();
+      }
+      application.close();
+      Application saved = applicationRepository.save(application);
+      return saved.getId();
     }
-    application.close();
-    Application saved = applicationRepository.save(application);
-    return saved.getId();
+    else throw new NoPermissionUpdateException();
+
   }
 
   @Transactional
-  public Long open(Long applicationId) {
+  public Long open(Long applicationId, Long memberId) {
+
+    Member member = findMemberById(memberId);
+
     Application application = findSimpleById(applicationId);
-    if(application.eqStatus(StatusCode.OPEN)){
-      throw new StatusBadRequestException();
+
+    Long clubId = application.getClub().getId();
+
+    if(clubId.equals(member.getClubId())){
+      if(application.eqStatus(StatusCode.OPEN)){
+        throw new StatusBadRequestException();
+      }
+      application.open();
+      Application saved = applicationRepository.save(application);
+      return saved.getId();
     }
-    application.open();
-    Application saved = applicationRepository.save(application);
-    return saved.getId();
+    else throw new NoPermissionUpdateException();
+  }
+
+  public Application findSimpleById(Long applicationId){
+    Application application = applicationRepository.findByIdAndIsDeletedIsFalse(applicationId).orElseThrow(() -> new ApplicationNotFoundException(applicationId));
+    return application;
+  }
+  private Member findMemberById(Long memberId){
+    Member findMember = memberRepository.findByIdAndIsDeletedIsFalse(memberId).orElseThrow(() -> new MemberNotFoundException(memberId));
+    return findMember;
   }
 }

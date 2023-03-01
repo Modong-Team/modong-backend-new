@@ -7,10 +7,10 @@ import java.util.List;
 public interface ApplicationRepository extends JpaRepository<Application,Long> {
 
   Optional<Application> findById(Long id);
-  List<Application> findAllByClubId(Long clubId);
+  List<Application> findAllByClubIdAndIsDeletedIsFalse(Long clubId);
 
-  Optional<Application> findByUrlId(String urlId);
-  boolean existsByUrlId(String urlId);
+  Optional<Application> findByUrlIdAndIsDeletedIsFalse(String urlId);
+  boolean existsByUrlIdAndIsDeletedIsFalse(String urlId);
 
   Optional<Application> findByIdAndIsDeletedIsFalse(Long id);
 

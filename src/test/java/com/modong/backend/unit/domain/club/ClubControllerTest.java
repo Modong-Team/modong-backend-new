@@ -106,7 +106,7 @@ public class ClubControllerTest extends ControllerTest {
     // then
     perform
         .andDo(print())
-        .andExpect(status().isNotFound());
+        .andExpect(status().isBadRequest());
   }
 
   @DisplayName("동아리 코드 존재검사 성공 - DB에 없는 동아리 코드를 사용할 경우 false 를 반환해야 한다.")

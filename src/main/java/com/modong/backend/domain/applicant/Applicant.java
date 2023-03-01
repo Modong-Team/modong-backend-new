@@ -32,6 +32,8 @@ public class Applicant extends BaseTimeEntity {
 
   private String name;
 
+  private String realName;
+
   private float rate;
 
   @Enumerated(EnumType.STRING)
@@ -48,11 +50,14 @@ public class Applicant extends BaseTimeEntity {
   @OneToMany(mappedBy = "applicant")
   private List<QuestionAnswer> questionAnswers = new ArrayList<>();
 
+  private Long countOfEvaluator;
   public Applicant(ApplicantCreateRequest applicantCreateRequest, Application application) {
+    this.realName = applicantCreateRequest.getName();
     this.name = applicantCreateRequest.getName();
     this.application = application;
     this.applicantStatus = ApplicantStatus.ACCEPT;
     this.rate = 0f;
+    this.countOfEvaluator = 0L;
   }
 
   public void changeStatus(ApplicantStatus applicantStatus) {
@@ -65,5 +70,12 @@ public class Applicant extends BaseTimeEntity {
 
   public void cancelFail() {
     this.isFail = false;
+  }
+  public void delete() {
+    this.isDeleted = true;
+  }
+
+  public void updateName(Long count){
+    this.name = this.name + String.valueOf(count);
   }
 }

@@ -10,10 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Schema(name = "메모 생성 요청")
 public class MemoCreateRequest {
-
-  @Schema(description = "지원서 ID",  example = "1")
-  @NotNull(message = "지원서 id는 필수 항목입니다!")
-  private Long applicationId;
   @Schema(description = "지원자 ID",  example = "2")
   @NotNull(message = "지원자 id는 필수 항목입니다!")
   private Long applicantId;
@@ -23,7 +19,6 @@ public class MemoCreateRequest {
 
   @Builder
   public MemoCreateRequest(Long applicationId, Long applicantId, String content) {
-    this.applicationId = applicationId;
     this.applicantId = applicantId;
     this.content = content;
   }
