@@ -35,27 +35,27 @@ public class FormController {
 
   private final FormService formService;
   //페이지 생성
-  @PostMapping("/form")
+  @PostMapping("/applications/{application_id}/forms")
   @Operation(summary = "페이지 생성", description = "지원서에 새로운 페이지를 저장한다. 질문 유형 QUESTION(1), SINGLE_SELECT_QUESTION(2), MULTI_SELECT_QUESTION(3)", responses = {
       @ApiResponse(responseCode = "201", description = "질문 페이지 생성 성공", content = @Content(schema = @Schema(implementation = SavedId.class)))
   })
-  public ResponseEntity createForm(@Valid @RequestBody FormRequest formRequest, @Auth Long memberId){
-      SavedId savedId = new SavedId(formService.create(formRequest, memberId));
+  public ResponseEntity createForm(@Valid @RequestBody FormRequest formRequest, @Auth Long memberId, @Valid @PathVariable(name = "application_id") Long applicationId){
+      SavedId savedId = new SavedId(formService.create(formRequest, memberId, applicationId));
       return ResponseEntity.created(URI.create("/api/v1/form/" + savedId.getId())).body(new BaseResponse(savedId, HttpStatus.CREATED.value(), CustomCode.SUCCESS_CREATE));
   }
   //페이지 수정
-  @PutMapping("/form/{form_id}")
+  @PutMapping("/applications/{application_id}/forms/{form_id}")
   @Operation(summary = "페이지 수정", description = "페이지의 ID를 이용해 수정한다. 질문 유형 QUESTION(1), SINGLE_SELECT_QUESTION(2), MULTI_SELECT_QUESTION(3)", responses = {
       @ApiResponse(responseCode = "200", description = "페이지 수정 성공", content = @Content(schema = @Schema(implementation = SavedId.class)))
   })
-  public ResponseEntity updateForm(@Valid @PathVariable(name = "form_id") Long formId, @RequestBody FormRequest formRequest, @Auth Long memberId){
+  public ResponseEntity updateForm(@Valid @PathVariable(name = "form_id") Long formId, @RequestBody FormRequest formRequest, @Auth Long memberId, @Valid @PathVariable(name = "application_id") Long applicationId){
     SavedId savedId = new SavedId(formService.update(formId,formRequest, memberId));
     return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.OK.value(), CustomCode.SUCCESS_UPDATE));
   }
 
 
   //id로 페이지 조회
-  @GetMapping("/form/{form_id}")
+  @GetMapping("/applications/{application_id}/forms/{form_id}")
   @Operation(summary = "페이지 조회", description = "페이지의 ID를 이용해 조회한다.", responses = {
       @ApiResponse(responseCode = "200", description = "페이지 조회 성공", content = @Content(schema = @Schema(implementation = FormResponse.class)))
   })
@@ -66,7 +66,7 @@ public class FormController {
   }
 
   //지원서 id로 해당되는 모든 페이지 조회
-  @GetMapping("/forms/{application_id}")
+  @GetMapping("applications/{application_id}/forms")
   @Operation(summary = "지원서 ID 로 해당되는 모든 페이지 조회", description = "지원서 ID를 이용해 포함된 모든 페이지를 조회한다.",responses = {
       @ApiResponse(responseCode = "200", description = "페이지 리스트 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = FormResponse.class))))
   })
@@ -76,7 +76,7 @@ public class FormController {
   }
 
   //지원서의 페이지 삭제
-  @DeleteMapping("/form/{form_id}")
+  @DeleteMapping("applications/{application_id}/forms/{form_id}")
   @Operation(summary = "페이지 삭제", description = "페이지의 ID를 이용해 삭제한다.", responses = {
       @ApiResponse(responseCode = "200", description = "페이지 삭제 성공", content = @Content(schema = @Schema(implementation = BaseResponse.class)))
   })
