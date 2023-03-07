@@ -77,13 +77,12 @@ public class ApplicationService {
   }
 
   @Transactional
-  public Long createApplication(ApplicationCreateRequest applicationCreateRequest, Long memberId) {
-    Long clubId = applicationCreateRequest.getClubId();
+  public Long createApplication(ApplicationCreateRequest applicationCreateRequest, Long memberId, Long clubId) {
     Member member = findMemberById(memberId);
 
     if(clubId.equals(member.getClubId())) {
       Club club = clubRepository.findById(clubId)
-              .orElseThrow(() -> new ClubNotFoundException(applicationCreateRequest.getClubId()));
+              .orElseThrow(() -> new ClubNotFoundException(clubId));
 
       Application application = new Application(applicationCreateRequest,club);
 

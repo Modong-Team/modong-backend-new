@@ -130,7 +130,7 @@ public class ServiceTest {
       .name(CLUB_NAME).profileImgUrl(CLUB_PROFILE_IMG_URL)
       .startDate(CLUB_START_DATE).endDate(CLUB_END_DATE).build();
   protected ApplicationCreateRequest applicationCreateRequest = ApplicationCreateRequest.builder()
-      .title(TITLE).clubId(CLUB_ID).essentialQuestionIds(E_QUESTION_ID_LIST).urlId(URL_ID).build();
+      .title(TITLE).essentialQuestionIds(E_QUESTION_ID_LIST).urlId(URL_ID).build();
   protected ApplicationUpdateRequest applicationUpdateRequest = ApplicationUpdateRequest.builder()
       .title(UPDATE_TITLE).essentialQuestionIds(UPDATE_E_QUESTION_ID_LIST).build();
 
