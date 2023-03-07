@@ -60,7 +60,6 @@ import com.modong.backend.domain.evaluation.dto.EvaluationCreateRequest;
 import com.modong.backend.domain.evaluation.dto.EvaluationUpdateRequest;
 import com.modong.backend.domain.memo.MemoRepository;
 import com.modong.backend.domain.memo.dto.MemoCreateRequest;
-import com.modong.backend.domain.memo.dto.MemoFindRequest;
 import com.modong.backend.domain.memo.dto.MemoUpdateRequest;
 import com.modong.backend.domain.questionAnswer.Dto.QuestionAnswerRequest;
 
@@ -153,10 +152,6 @@ public class ServiceTest {
 
   protected MemoUpdateRequest memoUpdateRequest = MemoUpdateRequest.builder()
       .content(MEMO_UPDATED_CONTENT)
-      .build();
-
-  protected MemoFindRequest memoFindRequest = MemoFindRequest.builder()
-      .applicantId(APPLICANT_ID)
       .build();
 
   protected EvaluationCreateRequest evaluationCreateRequest = EvaluationCreateRequest.builder()
