@@ -142,7 +142,7 @@ public class ServiceTest {
       .questionId(QUESTION_ID)
       .answer(QUESTION_ANSWER).build();
   protected ApplicantCreateRequest applicantCreateRequest = ApplicantCreateRequest.builder()
-      .applicationId(APPLICATION_ID).name(APPLICANT_NAME).essentialAnswers(Arrays.asList(essentialAnswerRequest))
+      .name(APPLICANT_NAME).essentialAnswers(Arrays.asList(essentialAnswerRequest))
       .questionAnswers(Arrays.asList(questionAnswerRequest)).build();
 
   protected MemoCreateRequest memoCreateRequest = MemoCreateRequest.builder()
