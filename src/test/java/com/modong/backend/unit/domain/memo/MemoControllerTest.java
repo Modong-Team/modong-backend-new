@@ -1,5 +1,6 @@
 package com.modong.backend.unit.domain.memo;
 
+import static com.modong.backend.Fixtures.ApplicantFixture.APPLICANT_ID;
 import static com.modong.backend.Fixtures.MemberFixture.MEMBER_ID;
 import static com.modong.backend.Fixtures.MemoFixture.MEMO_ID;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,12 +43,12 @@ public class MemoControllerTest extends ControllerTest {
     Long expected = MEMO_ID;
     requestBody = objectMapper.writeValueAsString(memoCreateRequest);
 
-    given(memoService.create(any(),any())).willReturn(expected);
+    given(memoService.create(any(),any(),any())).willReturn(expected);
     given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
     given(jwtTokenProvider.getPayload(anyString())).willReturn(String.valueOf(MemberFixture.ID));
 
     // when
-    ResultActions perform = mockMvc.perform(post("/api/v1/memo")
+    ResultActions perform = mockMvc.perform(post("/api/v1/applicants/"+ String.valueOf(APPLICANT_ID) +"/memos")
         .header(AUTHORIZATION_HEADER_NAME,AUTHORIZATION_HEADER_VALUE)
         .contentType(MediaType.APPLICATION_JSON).with(csrf())
         .content(requestBody));

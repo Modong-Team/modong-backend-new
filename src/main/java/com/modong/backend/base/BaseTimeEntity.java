@@ -21,5 +21,9 @@ public class BaseTimeEntity {
   @LastModifiedDate
   private LocalDateTime lastModifiedDate = LocalDateTime.now();
 
-  protected Boolean isDeleted = false;
+  private Boolean isDeleted = false;
+
+  public void delete(){
+    this.isDeleted = true;
+  }
 }

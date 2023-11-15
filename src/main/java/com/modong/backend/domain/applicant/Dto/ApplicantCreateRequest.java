@@ -17,10 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ApplicantCreateRequest {
 
-  @NotNull
-  @Schema(description = "지원서 ID",  example = "1")
-  private Long applicationId;
-
   @NotBlank
   @Schema(description = "지원자 이름",  example = "홍길동")
   private String name;
@@ -34,9 +30,8 @@ public class ApplicantCreateRequest {
 
 
   @Builder
-  public ApplicantCreateRequest(Long applicationId, String name,
+  public ApplicantCreateRequest(String name,
       List<EssentialAnswerRequest> essentialAnswers, List<QuestionAnswerRequest> questionAnswers) {
-    this.applicationId = applicationId;
     this.name = name;
     this.essentialAnswers = essentialAnswers;
     this.questionAnswers = questionAnswers;

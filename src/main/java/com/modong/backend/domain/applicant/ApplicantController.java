@@ -40,7 +40,7 @@ import java.util.List;
 public class ApplicantController {
   private final ApplicantService applicantService;
 
-  @GetMapping("/applicants/{application_id}") // 메인 화면에서 사용할 작성한 지원서 마다 어떤 지원자가 지원했는지 조회할때 사용
+  @GetMapping("/applications/{application_id}/applicants") // 메인 화면에서 사용할 작성한 지원서 마다 어떤 지원자가 지원했는지 조회할때 사용
   @Operation(summary = "지원자들 간편 조회", description = "지원서의 ID를 통해 모든 지원자들을 간편 조회 한다.", responses = {
       @ApiResponse(responseCode = "200", description = "지원자들 간편 조회(리스트 반환)", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ApplicantSimpleResponse.class))))
   })
@@ -52,7 +52,7 @@ public class ApplicantController {
     return ResponseEntity.ok(new BaseResponse(applicants, HttpStatus.OK.value(), CustomCode.SUCCESS_GET_LIST));
   }
 
-  @GetMapping("/applicant/{applicant_id}") // 각 지원자를 ID로 조회해 질문에 어떤 답을 했는지 알고 싶을때 사용하는 API
+  @GetMapping("/applicants/{applicant_id}") // 각 지원자를 ID로 조회해 질문에 어떤 답을 했는지 알고 싶을때 사용하는 API
   @Operation(summary = "지원자 답변 조회", description = "지원자를 ID로 조회해 질문에 어떤 답을 했는지 조회 한다.", responses = {
       @ApiResponse(responseCode = "200", description = "지원자 조회 성공", content = @Content(schema = @Schema(implementation = ApplicantDetailResponse.class)))
   })
@@ -61,7 +61,7 @@ public class ApplicantController {
     return ResponseEntity.ok(new BaseResponse(applicant, HttpStatus.OK.value(), CustomCode.SUCCESS_GET));
   }
 
-  @PatchMapping("/applicant/status/{applicant_id}")// 지원자의상태를 변경할때 사용하는 API
+  @PatchMapping("/status/applicants/{applicant_id}")// 지원자의상태를 변경할때 사용하는 API
   @Operation(summary = "지원자 상태 변경", description = "지원자를 상태를 변경한다. ", responses = {
       @ApiResponse(responseCode = "200", description = "지원자 상태 변경 성공", content = @Content(schema = @Schema(implementation = SavedId.class)))
   })
@@ -70,7 +70,7 @@ public class ApplicantController {
     return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.OK.value(), CustomCode.SUCCESS_UPDATE));
   }
 
-  @PatchMapping("/applicant/fail/cancel/{applicant_id}")// 지원자의 탈락 상태를 취소할때 사용하는 API
+  @PatchMapping("/fail/cancel/applicants/{applicant_id}")// 지원자의 탈락 상태를 취소할때 사용하는 API
   @Operation(summary = "지원자의 탈락 상태 취소", description = "탈락인 지원자의 상태를 탈락취소로 변경한다. ", responses = {
       @ApiResponse(responseCode = "200", description = "지원자의 탈락 상태 취소", content = @Content(schema = @Schema(implementation = SavedId.class)))
   })
@@ -79,12 +79,12 @@ public class ApplicantController {
     return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.OK.value(), CustomCode.SUCCESS_UPDATE));
   }
 
-  @PostMapping("/applicant")//지원자 생성과 동시에 답변들 저장하는 API
+  @PostMapping("/applications/{application_id}/applicants")//지원자 생성과 동시에 답변들 저장하는 API
   @Operation(summary = "지원자 생성", description = "지원자를 생성하고 답변을 저장한다.", responses = {
       @ApiResponse(responseCode = "200", description = "지원자 생성 성공", content = @Content(schema = @Schema(implementation = SavedId.class)))
   })
-  public ResponseEntity createApplicantAndSaveQuestions(@Validated @RequestBody ApplicantCreateRequest applicantCreateRequest){
-    SavedId savedId = new SavedId(applicantService.createApplicant(applicantCreateRequest));
+  public ResponseEntity createApplicantAndSaveQuestions(@Validated @PathVariable(name="application_id") Long applicationId, @Validated @RequestBody ApplicantCreateRequest applicantCreateRequest){
+    SavedId savedId = new SavedId(applicantService.createApplicant(applicationId,applicantCreateRequest));
     return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.CREATED.value(), CustomCode.SUCCESS_CREATE));
   }
 }
