@@ -48,3 +48,6 @@ Test Coverage [![codecov](https://codecov.io/gh/Modong-Team/modong-backend-new/b
 
 ![CI:CD 구성도](https://user-images.githubusercontent.com/38587274/229285147-9a2ede45-11aa-4aa9-a31d-4beff065cc38.png)
 
+
+
+<!-- Security scan triggered at 2025-09-01 22:48:42 -->
