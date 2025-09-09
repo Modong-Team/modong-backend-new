@@ -53,3 +53,5 @@ Test Coverage [![codecov](https://codecov.io/gh/Modong-Team/modong-backend-new/b
 <!-- Security scan triggered at 2025-09-01 22:48:42 -->
 
 <!-- Security scan triggered at 2025-09-07 01:44:12 -->
+
+<!-- Security scan triggered at 2025-09-09 05:21:13 -->
