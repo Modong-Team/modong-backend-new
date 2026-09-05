@@ -13,11 +13,6 @@ import lombok.ToString;
 @ToString
 @Schema(name = "지원서 페이지 생성 요청")
 public class FormRequest {
-
-  @NotNull
-  @Schema(description = "지원서 ID",  example = "1")
-  private Long applicationId;
-
   @NotBlank
   @Schema(description = "페이지 제목",  example = "첫번째 페이지")
   private String title;

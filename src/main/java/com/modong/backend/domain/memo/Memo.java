@@ -42,7 +42,4 @@ public class Memo extends BaseEntity {
   public void update(MemoUpdateRequest memoUpdateRequest){
     this.content = memoUpdateRequest.getContent();
   }
-  public void delete(){
-    this.isDeleted = true;
-  }
 }

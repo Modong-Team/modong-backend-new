@@ -16,12 +16,13 @@ import java.util.List;
 
 import com.modong.backend.global.exception.auth.NoPermissionCreateException;
 import com.modong.backend.global.exception.auth.NoPermissionDeleteException;
-import com.modong.backend.global.exception.auth.NoPermissionReadException;
 import com.modong.backend.global.exception.auth.NoPermissionUpdateException;
 import com.modong.backend.global.exception.member.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.Valid;
 
 @Service
 @RequiredArgsConstructor
@@ -34,10 +35,10 @@ public class FormService {
   private final MemberRepository memberRepository;
 
   @Transactional
-  public Long create(FormRequest formRequest, Long memberId) {
+  public Long create(FormRequest formRequest, Long memberId, Long applicationId) {
     Member member = findMemberById(memberId);
 
-    Application application = applicationService.findSimpleById(formRequest.getApplicationId());
+    Application application = applicationService.findSimpleById(applicationId);
 
     Long clubId = application.getClub().getId();
 
