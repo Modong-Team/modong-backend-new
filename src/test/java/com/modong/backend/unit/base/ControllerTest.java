@@ -1,9 +1,7 @@
 package com.modong.backend.unit.base;
 
 import static com.modong.backend.Fixtures.ApplicantFixture.APPLICANT_ID;
-import static com.modong.backend.Fixtures.ApplicationFixture.APPLICATION_ID;
 import static com.modong.backend.Fixtures.MemoFixture.MEMO_CONTENT;
-import static com.modong.backend.Fixtures.MemoFixture.MEMO_ID;
 import static com.modong.backend.Fixtures.MemoFixture.MEMO_UPDATED_CONTENT;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +12,6 @@ import com.modong.backend.config.AuthConfig;
 import com.modong.backend.domain.club.ClubService;
 import com.modong.backend.domain.memo.MemoService;
 import com.modong.backend.domain.memo.dto.MemoCreateRequest;
-import com.modong.backend.domain.memo.dto.MemoFindRequest;
 import com.modong.backend.domain.memo.dto.MemoUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -48,18 +45,12 @@ public class ControllerTest {
   protected static final String AUTHORIZATION_HEADER_NAME = "Authorization";
   protected static final String AUTHORIZATION_HEADER_VALUE = "Bearer aaaaaaaa.bbbbbbbb.cccccccc";
   protected MemoCreateRequest memoCreateRequest = MemoCreateRequest.builder()
-      .applicationId(APPLICATION_ID)
       .applicantId(APPLICANT_ID)
       .content(MEMO_CONTENT)
       .build();
 
   protected MemoUpdateRequest memoUpdateRequest = MemoUpdateRequest.builder()
       .content(MEMO_UPDATED_CONTENT)
-      .build();
-
-  protected MemoFindRequest memoFindRequest = MemoFindRequest.builder()
-      .applicantId(APPLICANT_ID)
-      .applicationId(APPLICATION_ID)
       .build();
 
 }

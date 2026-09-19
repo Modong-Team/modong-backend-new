@@ -54,7 +54,4 @@ public class Evaluation extends BaseEntity {
     this.comment = evaluationUpdateRequest.getNewComment();
   }
 
-  public void delete() {
-    this.isDeleted = true;
-  }
 }

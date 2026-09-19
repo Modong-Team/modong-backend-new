@@ -60,7 +60,6 @@ import com.modong.backend.domain.evaluation.dto.EvaluationCreateRequest;
 import com.modong.backend.domain.evaluation.dto.EvaluationUpdateRequest;
 import com.modong.backend.domain.memo.MemoRepository;
 import com.modong.backend.domain.memo.dto.MemoCreateRequest;
-import com.modong.backend.domain.memo.dto.MemoFindRequest;
 import com.modong.backend.domain.memo.dto.MemoUpdateRequest;
 import com.modong.backend.domain.questionAnswer.Dto.QuestionAnswerRequest;
 
@@ -131,7 +130,7 @@ public class ServiceTest {
       .name(CLUB_NAME).profileImgUrl(CLUB_PROFILE_IMG_URL)
       .startDate(CLUB_START_DATE).endDate(CLUB_END_DATE).build();
   protected ApplicationCreateRequest applicationCreateRequest = ApplicationCreateRequest.builder()
-      .title(TITLE).clubId(CLUB_ID).essentialQuestionIds(E_QUESTION_ID_LIST).urlId(URL_ID).build();
+      .title(TITLE).essentialQuestionIds(E_QUESTION_ID_LIST).urlId(URL_ID).build();
   protected ApplicationUpdateRequest applicationUpdateRequest = ApplicationUpdateRequest.builder()
       .title(UPDATE_TITLE).essentialQuestionIds(UPDATE_E_QUESTION_ID_LIST).build();
 
@@ -143,7 +142,7 @@ public class ServiceTest {
       .questionId(QUESTION_ID)
       .answer(QUESTION_ANSWER).build();
   protected ApplicantCreateRequest applicantCreateRequest = ApplicantCreateRequest.builder()
-      .applicationId(APPLICATION_ID).name(APPLICANT_NAME).essentialAnswers(Arrays.asList(essentialAnswerRequest))
+      .name(APPLICANT_NAME).essentialAnswers(Arrays.asList(essentialAnswerRequest))
       .questionAnswers(Arrays.asList(questionAnswerRequest)).build();
 
   protected MemoCreateRequest memoCreateRequest = MemoCreateRequest.builder()
@@ -153,10 +152,6 @@ public class ServiceTest {
 
   protected MemoUpdateRequest memoUpdateRequest = MemoUpdateRequest.builder()
       .content(MEMO_UPDATED_CONTENT)
-      .build();
-
-  protected MemoFindRequest memoFindRequest = MemoFindRequest.builder()
-      .applicantId(APPLICANT_ID)
       .build();
 
   protected EvaluationCreateRequest evaluationCreateRequest = EvaluationCreateRequest.builder()

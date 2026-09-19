@@ -75,10 +75,10 @@ public class ApplicationServiceTest extends ServiceTest {
     given(essentialQuestionRepository.findById(anyLong())).willReturn(Optional.of(essentialQuestion));
 
     //when
-    Long savedId = applicationService.createApplication(applicationCreateRequest, MemberFixture.ID);
+    Long savedId = applicationService.createApplication(applicationCreateRequest, MemberFixture.ID,CLUB_ID);
 
     //then
-    assertThatCode(() -> applicationService.createApplication(applicationCreateRequest, MemberFixture.ID)).doesNotThrowAnyException();
+    assertThatCode(() -> applicationService.createApplication(applicationCreateRequest, MemberFixture.ID,CLUB_ID)).doesNotThrowAnyException();
 
     assertThat(savedId).isEqualTo(APPLICATION_ID);
   }
@@ -93,7 +93,7 @@ public class ApplicationServiceTest extends ServiceTest {
         .willReturn(Optional.empty());
 
     //then
-    assertThatThrownBy(() -> applicationService.createApplication(applicationCreateRequest, MemberFixture.ID))
+    assertThatThrownBy(() -> applicationService.createApplication(applicationCreateRequest, MemberFixture.ID,CLUB_ID))
         .isInstanceOf(ClubNotFoundException.class);
   }
   @DisplayName("지원서 생성 실패 - 지원서의 UrlId가 중복이라면 UrlIdDuplicateException 가 발생해야 한다.")
@@ -108,7 +108,7 @@ public class ApplicationServiceTest extends ServiceTest {
         .willReturn(true);
 
     //then
-    assertThatThrownBy(() -> applicationService.createApplication(applicationCreateRequest, MemberFixture.ID))
+    assertThatThrownBy(() -> applicationService.createApplication(applicationCreateRequest, MemberFixture.ID,CLUB_ID))
         .isInstanceOf(UrlIdDuplicateException.class);
   }
   @DisplayName("지원서 상세 조회 성공 (Id)")

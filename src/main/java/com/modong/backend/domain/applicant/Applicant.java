@@ -71,9 +71,6 @@ public class Applicant extends BaseTimeEntity {
   public void cancelFail() {
     this.isFail = false;
   }
-  public void delete() {
-    this.isDeleted = true;
-  }
 
   public void updateName(Long count){
     this.name = this.name + String.valueOf(count);

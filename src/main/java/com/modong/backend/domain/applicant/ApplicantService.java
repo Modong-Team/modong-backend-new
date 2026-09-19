@@ -92,9 +92,8 @@ public class ApplicantService {
 
   }
   @Transactional // 지원자 생성 및 질문에 대한 답변들 저장
-  public Long createApplicant(ApplicantCreateRequest applicantCreateRequest) {
+  public Long createApplicant(Long applicationId, ApplicantCreateRequest applicantCreateRequest) {
 
-    Long applicationId = applicantCreateRequest.getApplicationId();
     Application application = applicationService.findSimpleById(applicationId);
 
     if(application.checkApplicationClosed()){

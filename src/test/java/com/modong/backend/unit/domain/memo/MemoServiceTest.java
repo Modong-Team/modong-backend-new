@@ -85,10 +85,10 @@ public class MemoServiceTest extends ServiceTest {
 
 
     //when
-    Long savedId = memoService.create(memoCreateRequest,MemberFixture.ID);
+    Long savedId = memoService.create(memoCreateRequest,MemberFixture.ID,APPLICANT_ID);
 
     //then
-    assertThatCode(() -> memoService.create(memoCreateRequest,MemberFixture.ID)).doesNotThrowAnyException();
+    assertThatCode(() -> memoService.create(memoCreateRequest,MemberFixture.ID,APPLICANT_ID)).doesNotThrowAnyException();
 
     assertThat(savedId).isEqualTo(MEMO_ID);
   }
@@ -101,7 +101,7 @@ public class MemoServiceTest extends ServiceTest {
     given(applicantRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(applicant));
 
     //then
-    assertThatThrownBy(() -> memoService.create(memoCreateRequest,MemberFixture.ID))
+    assertThatThrownBy(() -> memoService.create(memoCreateRequest,MemberFixture.ID,APPLICANT_ID))
         .isInstanceOf(MemberNotFoundException.class);
   }
 
@@ -114,7 +114,7 @@ public class MemoServiceTest extends ServiceTest {
     given(applicantRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.empty());
 
     //then
-    assertThatThrownBy(() -> memoService.create(memoCreateRequest,MemberFixture.ID))
+    assertThatThrownBy(() -> memoService.create(memoCreateRequest,MemberFixture.ID,APPLICANT_ID))
         .isInstanceOf(ApplicantNotFoundException.class);
   }
   @DisplayName("메모 생성 실패 - 권한 없음(회원의 동아리와 지원서를 수정할 수 있는 동아리가 다를 경우)")
@@ -128,7 +128,7 @@ public class MemoServiceTest extends ServiceTest {
     ReflectionTestUtils.setField(member,"clubId",another.getId());
 
     //then
-    assertThatThrownBy(() -> memoService.create(memoCreateRequest,MemberFixture.ID))
+    assertThatThrownBy(() -> memoService.create(memoCreateRequest,MemberFixture.ID,APPLICANT_ID))
         .isInstanceOf(NoPermissionCreateException.class);
   }
 
@@ -232,12 +232,12 @@ public class MemoServiceTest extends ServiceTest {
 
     List<MemoResponse> expected = Arrays.asList(new MemoResponse(memo,member, APPLICATION_ID, APPLICANT_ID));
     //when
-    List<MemoResponse> actual = memoService.findAllByApplication(memoFindRequest,MemberFixture.ID);
+    List<MemoResponse> actual = memoService.findAllByApplication(APPLICANT_ID,MemberFixture.ID);
 
     //then
     assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
 
-    assertThatCode(() -> memoService.findAllByApplication(memoFindRequest,MemberFixture.ID)).doesNotThrowAnyException();
+    assertThatCode(() -> memoService.findAllByApplication(APPLICANT_ID,MemberFixture.ID)).doesNotThrowAnyException();
   }
   @DisplayName("지원자에 대한 모든 메모 조회 실패 - 회원 조회 실패")
   @Test
@@ -248,7 +248,7 @@ public class MemoServiceTest extends ServiceTest {
     given(applicantRepository.findByIdAndIsDeletedIsFalse(anyLong())).willReturn(Optional.of(applicant));
 
     //then
-    assertThatThrownBy(() -> memoService.findAllByApplication(memoFindRequest,MemberFixture.ID))
+    assertThatThrownBy(() -> memoService.findAllByApplication(APPLICANT_ID,MemberFixture.ID))
         .isInstanceOf(MemberNotFoundException.class);
   }
 
@@ -263,7 +263,7 @@ public class MemoServiceTest extends ServiceTest {
     //조회 권한 없게 설정
     ReflectionTestUtils.setField(member,"clubId",another.getId());
     //then
-    assertThatThrownBy(() -> memoService.findAllByApplication(memoFindRequest,MemberFixture.ID))
+    assertThatThrownBy(() -> memoService.findAllByApplication(APPLICANT_ID,MemberFixture.ID))
         .isInstanceOf(NoPermissionReadException.class);
   }
 }

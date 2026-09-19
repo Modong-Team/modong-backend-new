@@ -5,10 +5,7 @@ import com.modong.backend.auth.member.MemberRepository;
 import com.modong.backend.domain.applicant.Applicant;
 import com.modong.backend.domain.applicant.repository.ApplicantRepository;
 import com.modong.backend.domain.application.Application;
-import com.modong.backend.domain.application.ApplicationRepository;
-import com.modong.backend.domain.club.clubMemeber.ClubMember;
 import com.modong.backend.domain.memo.dto.MemoCreateRequest;
-import com.modong.backend.domain.memo.dto.MemoFindRequest;
 import com.modong.backend.domain.memo.dto.MemoResponse;
 import com.modong.backend.domain.memo.dto.MemoUpdateRequest;
 import com.modong.backend.global.exception.ResourceNotFoundException;
@@ -34,8 +31,7 @@ public class MemoService {
   private final ApplicantRepository applicantRepository;
 
   @Transactional
-  public Long create(MemoCreateRequest memoCreateRequest, Long memberId) {
-    Long applicantId = memoCreateRequest.getApplicantId();
+  public Long create(MemoCreateRequest memoCreateRequest, Long memberId, Long applicantId) {
 
     //회원 조회 실패시 에러 반환
     Member member = memberRepository.findByIdAndIsDeletedIsFalse(memberId).orElseThrow(() -> new MemberNotFoundException(memberId));
@@ -57,7 +53,7 @@ public class MemoService {
 
   //작성자만 수정 가능
   @Transactional
-  public Long update(MemoUpdateRequest memoUpdateRequest,Long memoId, Long memberId) {
+  public Long update(MemoUpdateRequest memoUpdateRequest, Long memoId, Long memberId) {
     //회원 조회 실패시 에러 반환
     Member member = memberRepository.findByIdAndIsDeletedIsFalse(memberId).orElseThrow(() -> new MemberNotFoundException(memberId));
 
@@ -89,8 +85,7 @@ public class MemoService {
     else throw new NoPermissionDeleteException();
   }
 
-  public List<MemoResponse> findAllByApplication(MemoFindRequest memoFindRequest, Long memberId) {
-    Long applicantId = memoFindRequest.getApplicantId();
+  public List<MemoResponse> findAllByApplication(Long applicantId, Long memberId) {
     //회원 조회 실패시 에러 반환
     Member member = memberRepository.findByIdAndIsDeletedIsFalse(memberId).orElseThrow(() -> new MemberNotFoundException(memberId));
     //지원자 조회 실패시 에러 반환

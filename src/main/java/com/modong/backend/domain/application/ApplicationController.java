@@ -38,46 +38,47 @@ public class ApplicationController {
   private final ApplicationService applicationService;
 
   //지원서 생성
-  @PostMapping("/application")
+  @PostMapping("/clubs/{club_id}/applications")
   @Operation(summary = "지원서를 생성한다.", description = "지원서를 생성한다.", responses = {
       @ApiResponse(responseCode = "201", description = "지원서 조회 성공", content = @Content(schema = @Schema(implementation = ApplicationDetailResponse.class)))
   })
-  public ResponseEntity createApplication(@Validated @RequestBody ApplicationCreateRequest applicationCreateRequest, @Auth Long memberId ){
-    SavedId savedId = new SavedId(applicationService.createApplication(applicationCreateRequest, memberId));
-    return ResponseEntity.created(URI.create("/api/v1/application/" + savedId.getId())).body(new BaseResponse(savedId,HttpStatus.CREATED.value(),CustomCode.SUCCESS_CREATE));
+  public ResponseEntity createApplication(@Validated @RequestBody ApplicationCreateRequest applicationCreateRequest, @Auth Long memberId, @Validated @PathVariable(name="club_id") Long clubId){
+    SavedId savedId = new SavedId(applicationService.createApplication(applicationCreateRequest, memberId, clubId));
+    return ResponseEntity.created(URI.create("/api/v1/applications/" + savedId.getId())).body(new BaseResponse(savedId,HttpStatus.CREATED.value(),CustomCode.SUCCESS_CREATE));
   }
 
   //지원서 수정(필수 질문 부분)
-  @PutMapping("/application/{application_id}")
+  @PutMapping("/clubs/{club_id}/applications/{application_id}")
   @Operation(summary = "지원서 수정", description = "지원서의 ID를 이용해 작성한 지원서를 수정한다.")
-  public ResponseEntity updateApplication(@Validated @PathVariable(name = "application_id") Long applicationId, @RequestBody ApplicationUpdateRequest applicationUpdateRequest, @Auth Long memberId){
+  public ResponseEntity updateApplication(@Validated @PathVariable(name = "application_id") Long applicationId, @RequestBody ApplicationUpdateRequest applicationUpdateRequest, @Auth Long memberId,
+                                          @Validated @PathVariable(name="club_id") Long clubId){
     SavedId savedId = new SavedId(applicationService.updateApplication(applicationId, applicationUpdateRequest, memberId));
     return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.OK.value(), CustomCode.SUCCESS_UPDATE));
 
   }
 
   //지원서 삭제
-  @DeleteMapping("/application/{application_id}")
+  @DeleteMapping("/clubs/{club_id}/applications/{application_id}")
   @Operation(summary = "지원서 삭제", description = "지원서의 ID를 이용해 작성한 지원서를 삭제한다.")
   public ResponseEntity deleteApplicationById(@Validated @PathVariable(name = "application_id") Long applicationId, @Auth Long memberId) {
     applicationService.deleteApplication(applicationId, memberId);
     return ResponseEntity.ok(new BaseResponse(HttpStatus.OK.value(), CustomCode.SUCCESS_DELETE));
   }
 
-  @PatchMapping("/application/open/{application_id}")
+  @PatchMapping("/clubs/{club_id}/open/applications/{application_id}")
   @Operation(summary = "지원서 모집으로 상태 변경", description = "지원서의 ID를 이용해 작성한 지원서의 상태를 모집으로 수정한다.")
   public ResponseEntity updateStatusToOpen(@Validated @PathVariable(name = "application_id") Long applicationId, @Auth Long memberId){
     SavedId savedId = new SavedId(applicationService.open(applicationId, memberId));
     return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.OK.value(), CustomCode.SUCCESS_UPDATE));
   }
-  @PatchMapping("/application/close/{application_id}")
+  @PatchMapping("/clubs/{club_id}/close/applications/{application_id}")
   @Operation(summary = "지원서 마감으로 상태 변경", description = "지원서의 ID를 이용해 작성한 지원서의 상태를 마감으로 수정한다.")
   public ResponseEntity updateStatusToClose(@Validated @PathVariable(name = "application_id") Long applicationId, @Auth Long memberId){
     SavedId savedId = new SavedId(applicationService.close(applicationId, memberId));
     return ResponseEntity.ok(new BaseResponse(savedId, HttpStatus.OK.value(), CustomCode.SUCCESS_UPDATE));
   }
   //동아리 전체 지원서 조회
-  @GetMapping("/applications/{club_id}")
+  @GetMapping("/clubs/{club_id}/applications")
   @Operation(summary = "동아리의 전체 지원서 조회", description = "동아리의 ID를 이용해 작성한 모든 지원서를 조회한다.", responses = {
       @ApiResponse(responseCode = "200", description = "게시글 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ApplicationSimpleResponse.class))))
   })
@@ -86,7 +87,7 @@ public class ApplicationController {
     return ResponseEntity.ok(new BaseResponse(applications, HttpStatus.OK.value(), CustomCode.SUCCESS_GET_LIST));
   }
   //지원서 조회
-  @GetMapping("/application/{application_id}")
+  @GetMapping("/clubs/{club_id}/applications/{application_id}")
   @Operation(summary = "지원서 조회", description = "지원서의 ID를 이용해 작성한 지원서를 조회한다.", responses = {
       @ApiResponse(responseCode = "200", description = "지원서 조회 성공", content = @Content(schema = @Schema(implementation = ApplicationDetailResponse.class)))
   })
@@ -95,7 +96,7 @@ public class ApplicationController {
     return ResponseEntity.ok(new BaseResponse(application,HttpStatus.OK.value(), CustomCode.SUCCESS_GET));
   }
   //지원서 조회(
-  @GetMapping("/view/application/{url_id}")
+  @GetMapping("/clubs/{club_id}/view/applications/{url_id}")
   @Operation(summary = "지원서 조회", description = "지원서의 링크 아이디를 이용해 작성한 지원서를 조회한다.", responses = {
       @ApiResponse(responseCode = "200", description = "지원서 조회 성공", content = @Content(schema = @Schema(implementation = ApplicationDetailResponse.class)))
   })

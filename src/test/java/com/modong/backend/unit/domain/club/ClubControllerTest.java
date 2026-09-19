@@ -53,7 +53,7 @@ public class ClubControllerTest extends ControllerTest {
         .willReturn(new ClubCreateResponse(club));
 
     // when
-    ResultActions perform = mockMvc.perform(post("/api/v1/club")
+    ResultActions perform = mockMvc.perform(post("/api/v1/clubs")
         .contentType(MediaType.APPLICATION_JSON).with(csrf())
         .content(requestBody));
 
@@ -78,7 +78,7 @@ public class ClubControllerTest extends ControllerTest {
         .willReturn(clubResponse);
 
     // when
-    ResultActions perform = mockMvc.perform(get(String.format("/api/v1/club/%d",anyLong())));
+    ResultActions perform = mockMvc.perform(get(String.format("/api/v1/clubs/%d",anyLong())));
 
     // then
     perform
@@ -101,7 +101,7 @@ public class ClubControllerTest extends ControllerTest {
         .willThrow(expected);
 
     // when
-    ResultActions perform = mockMvc.perform(get(String.format("/api/v1/club/%d",anyLong())));
+    ResultActions perform = mockMvc.perform(get(String.format("/api/v1/clubs/%d",anyLong())));
 
     // then
     perform
@@ -121,7 +121,7 @@ public class ClubControllerTest extends ControllerTest {
     given(clubService.checkClubCode(any())).willReturn(result);
 
     // when
-    ResultActions perform = mockMvc.perform(post("/api/v1/club/check")
+    ResultActions perform = mockMvc.perform(post("/api/v1/check/clubs")
         .contentType(MediaType.APPLICATION_JSON).with(csrf())
         .content(requestBody));
 
@@ -144,7 +144,7 @@ public class ClubControllerTest extends ControllerTest {
     given(clubService.checkClubCode(any())).willReturn(result);
 
     // when
-    ResultActions perform = mockMvc.perform(post("/api/v1/club/check")
+    ResultActions perform = mockMvc.perform(post("/api/v1/check/clubs")
         .contentType(MediaType.APPLICATION_JSON).with(csrf())
         .content(requestBody));
 

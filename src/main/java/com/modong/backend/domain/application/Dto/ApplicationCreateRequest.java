@@ -16,10 +16,6 @@ import lombok.ToString;
 public class ApplicationCreateRequest {
 
   @NotNull
-  @Schema(description = "동아리 ID",  example = "1")
-  private Long clubId;
-
-  @NotNull
   @Schema(description = "지원서 제목",  example = "동아리 지원서 ver 1.0")
   private String title;
 
@@ -32,9 +28,8 @@ public class ApplicationCreateRequest {
 
 
   @Builder
-  public ApplicationCreateRequest(Long clubId, String title, String urlId,
+  public ApplicationCreateRequest(String title, String urlId,
       List<Long> essentialQuestionIds) {
-    this.clubId = clubId;
     this.title = title;
     this.urlId = urlId;
     this.essentialQuestionIds = essentialQuestionIds;
